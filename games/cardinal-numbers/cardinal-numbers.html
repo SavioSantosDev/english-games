@@ -211,6 +211,54 @@
             color: #004085;
             border-left: 4px solid #667eea;
         }
+
+        .speech-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            font-weight: bold;
+            margin: 0 10px 15px 10px;
+            min-width: 180px;
+        }
+
+        .speech-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .speech-button:active {
+            transform: translateY(0);
+        }
+
+        .speech-button.recording {
+            background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        #listeningInput {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1.2em;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        #listeningInput:focus {
+            border-color: #667eea;
+        }
     </style>
 </head>
 <body>
@@ -221,6 +269,37 @@
             <p class="subtitle">Practice English Numbers</p>
             
             <div class="instruction">
+                🎯 Choose your practice mode:
+            </div>
+
+            <div class="range-selector">
+                <div class="range-option" onclick="showModeScreen('writing')">
+                    <h3>✍️ Writing Mode</h3>
+                    <p>See numbers and write them in English</p>
+                </div>
+                
+                <div class="range-option" onclick="showModeScreen('speaking')">
+                    <h3>🗣️ Speaking Mode</h3>
+                    <p>See numbers and speak them aloud</p>
+                </div>
+                
+                <div class="range-option" onclick="showModeScreen('listening')">
+                    <h3>👂 Listening Mode</h3>
+                    <p>Listen to numbers and write what you hear</p>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="secondary-button" onclick="backToMainMenu()">← Back to Main Menu</button>
+            </div>
+        </div>
+
+        <!-- Tela de Seleção de Dificuldade -->
+        <div id="difficultyScreen" class="screen">
+            <h1>🎮 Cardinal Numbers</h1>
+            <p class="subtitle" id="modeTitle">Writing Mode</p>
+            
+            <div class="instruction" id="modeInstruction">
                 📝 Choose a number range and write the numbers in English!
             </div>
 
@@ -235,19 +314,20 @@
                     <p>Numbers from 1 to 100</p>
                 </div>
                 
-                <div class="range-option" onclick="startGame(1, 1000)">
+                <div class="range-option" onclick="startGame(1, 999999)">
                     <h3>🔴 Hard</h3>
-                    <p>Numbers from 1 to 1000</p>
+                    <p>Numbers from 1 to 999,999</p>
                 </div>
                 
-                <div class="range-option" onclick="startGame(1, 10000)">
+                <div class="range-option" onclick="startGame(1, 999999999)">
                     <h3>🔥 Expert</h3>
-                    <p>Numbers from 1 to 10,000</p>
+                    <p>Numbers from 1 to 999,999,999</p>
                 </div>
             </div>
 
             <div class="button-group">
-                <button class="secondary-button" onclick="backToMainMenu()">← Back to Main Menu</button>
+                <button class="secondary-button" onclick="backToStart()">← Back to Modes</button>
+                <button class="secondary-button" onclick="backToMainMenu()">← Main Menu</button>
             </div>
         </div>
 
@@ -270,13 +350,35 @@
                 </div>
             </div>
 
-            <div class="instruction">
-                Write the number below in English and press Enter
+            <div class="instruction" id="gameInstruction">
+                Write the number below in English and press Enter.<br>
+                <small style="opacity: 0.8;">Keep trying until you get it right!</small>
             </div>
 
             <div class="number-display" id="numberDisplay">0</div>
 
-            <div class="input-group">
+            <!-- Speaking Mode Controls -->
+            <div id="speakingControls" class="input-group" style="display: none;">
+                <button id="startSpeaking" onclick="startSpeechRecognition()" class="speech-button">🎤 Start Speaking</button>
+                <button id="playAudio" onclick="playNumberAudio()" class="speech-button">🔊 Repeat Number</button>
+            </div>
+
+            <!-- Listening Mode Controls -->
+            <div id="listeningControls" class="input-group" style="display: none;">
+                <button id="playListening" onclick="playNumberAudio()" class="speech-button">🔊 Play Number</button>
+                <div style="margin-top: 15px;">
+                    <input 
+                        type="text" 
+                        id="listeningInput" 
+                        placeholder="Type what you heard..." 
+                        autocomplete="off"
+                        onkeypress="handleKeyPress(event)"
+                    >
+                </div>
+            </div>
+
+            <!-- Writing Mode Controls (existing) -->
+            <div id="writingControls" class="input-group">
                 <input 
                     type="text" 
                     id="answerInput" 
@@ -289,8 +391,10 @@
             <div id="feedback" class="feedback hidden"></div>
 
             <div class="button-group">
-                <button onclick="checkAnswer()">✓ Check Answer</button>
-                <button class="secondary-button" onclick="backToMainMenu()">← Back to Main Menu</button>
+                <button id="checkBtn" onclick="checkAnswer()">✓ Check Answer</button>
+                <button id="nextBtn" onclick="generateNewNumber()" style="display: none;">→ Next Number</button>
+                <button class="secondary-button" onclick="backToDifficulty()">← Back to Difficulty</button>
+                <button class="secondary-button" onclick="backToMainMenu()">← Main Menu</button>
             </div>
         </div>
     </div>
@@ -303,6 +407,9 @@
         let incorrectCount = 0;
         let totalCount = 0;
         let currentAnswer = '';
+        let gameMode = 'writing'; // 'writing', 'speaking', 'listening'
+        let speechSynthesis = window.speechSynthesis;
+        let recognition = null;
 
         function numberToWords(num) {
             const ones = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
@@ -317,12 +424,22 @@
                 return tens[Math.floor(num / 10)] + (num % 10 !== 0 ? '-' + ones[num % 10] : '');
             }
             if (num < 1000) {
-                return ones[Math.floor(num / 100)] + ' hundred' + 
-                    (num % 100 !== 0 ? ' and ' + numberToWords(num % 100) : '');
+                const hundreds = Math.floor(num / 100);
+                const remainder = num % 100;
+                const hundredText = hundreds === 1 ? 'a hundred' : ones[hundreds] + ' hundred';
+                return hundredText + (remainder !== 0 ? ' and ' + numberToWords(remainder) : '');
             }
             if (num < 1000000) {
-                return numberToWords(Math.floor(num / 1000)) + ' thousand' + 
-                    (num % 1000 !== 0 ? ' ' + numberToWords(num % 1000) : '');
+                const thousands = Math.floor(num / 1000);
+                const remainder = num % 1000;
+                const thousandText = thousands === 1 ? 'a thousand' : numberToWords(thousands) + ' thousand';
+                return thousandText + (remainder !== 0 ? ' ' + numberToWords(remainder) : '');
+            }
+            if (num < 1000000000) {
+                const millions = Math.floor(num / 1000000);
+                const remainder = num % 1000000;
+                const millionText = millions === 1 ? 'a million' : numberToWords(millions) + ' million';
+                return millionText + (remainder !== 0 ? ' ' + numberToWords(remainder) : '');
             }
             
             return num.toString();
@@ -330,6 +447,52 @@
 
         function getRandomNumber(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function getSmartRandomNumber(min, max) {
+            // Para ranges pequenos, usar distribuição normal
+            if (max <= 100) {
+                return getRandomNumber(min, max);
+            }
+            
+            // Para ranges maiores, usar distribuição ponderada
+            const rand = Math.random();
+            
+            if (max <= 999999) { // Hard mode
+                if (rand < 0.15) {
+                    // 15% - Unidades e dezenas (1-99)
+                    return getRandomNumber(1, Math.min(99, max));
+                } else if (rand < 0.35) {
+                    // 20% - Centenas (100-999)
+                    return getRandomNumber(100, Math.min(999, max));
+                } else if (rand < 0.70) {
+                    // 35% - Milhares (1000-99999)
+                    return getRandomNumber(1000, Math.min(99999, max));
+                } else {
+                    // 30% - Dezenas/centenas de milhares (100000-999999)
+                    return getRandomNumber(100000, max);
+                }
+            } else { // Expert mode
+                if (rand < 0.10) {
+                    // 10% - Unidades e dezenas (1-99)
+                    return getRandomNumber(1, 99);
+                } else if (rand < 0.15) {
+                    // 5% - Centenas (100-999)
+                    return getRandomNumber(100, 999);
+                } else if (rand < 0.30) {
+                    // 15% - Milhares (1000-99999)
+                    return getRandomNumber(1000, 99999);
+                } else if (rand < 0.60) {
+                    // 30% - Centenas de milhares (100000-999999)
+                    return getRandomNumber(100000, 999999);
+                } else if (rand < 0.85) {
+                    // 25% - Milhões (1000000-99999999)
+                    return getRandomNumber(1000000, 99999999);
+                } else {
+                    // 15% - Centenas de milhões (100000000-999999999)
+                    return getRandomNumber(100000000, max);
+                }
+            }
         }
 
         function startGame(min, max) {
@@ -341,15 +504,24 @@
             
             updateScores();
             showScreen('gameScreen');
+            setupGameMode();
             generateNewNumber();
         }
 
         function generateNewNumber() {
-            currentNumber = getRandomNumber(minRange, maxRange);
+            currentNumber = getSmartRandomNumber(minRange, maxRange);
             currentAnswer = numberToWords(currentNumber);
-            document.getElementById('numberDisplay').textContent = currentNumber;
-            document.getElementById('answerInput').value = '';
-            document.getElementById('answerInput').focus();
+            document.getElementById('numberDisplay').textContent = currentNumber.toLocaleString();
+            
+            // Clear inputs based on mode
+            if (gameMode === 'writing') {
+                document.getElementById('answerInput').value = '';
+                document.getElementById('answerInput').focus();
+            } else if (gameMode === 'listening') {
+                document.getElementById('listeningInput').value = '';
+                document.getElementById('listeningInput').focus();
+            }
+            
             hideFeedback();
         }
 
@@ -358,17 +530,49 @@
                 .trim()
                 .replace(/\s+/g, ' ')
                 .replace(/,/g, '')
-                .replace(/\band\b/g, 'and');
+                .replace(/\band\b/g, 'and')
+                // Normalizar variações de "a" vs "one"
+                .replace(/\bone hundred\b/g, 'a hundred')
+                .replace(/\bone thousand\b/g, 'a thousand')
+                .replace(/\bone million\b/g, 'a million');
         }
 
         function checkAnswer() {
-            const userAnswer = document.getElementById('answerInput').value;
+            let userAnswer = '';
+            
+            if (gameMode === 'writing') {
+                userAnswer = document.getElementById('answerInput').value;
+            } else if (gameMode === 'listening') {
+                userAnswer = document.getElementById('listeningInput').value;
+            } else {
+                return; // Speaking mode doesn't use this function
+            }
+            
             const normalizedUser = normalizeAnswer(userAnswer);
             const normalizedCorrect = normalizeAnswer(currentAnswer);
             
+            // Criar variações aceitas da resposta correta
+            const acceptedAnswers = [normalizedCorrect];
+            
+            // Adicionar variações com "one" em vez de "a"
+            const oneVariant = normalizedCorrect
+                .replace(/\ba hundred\b/g, 'one hundred')
+                .replace(/\ba thousand\b/g, 'one thousand')
+                .replace(/\ba million\b/g, 'one million');
+            
+            if (oneVariant !== normalizedCorrect) {
+                acceptedAnswers.push(oneVariant);
+            }
+            
+            // For listening mode, also accept the numeric form
+            if (gameMode === 'listening') {
+                const numericAnswer = currentNumber.toString();
+                acceptedAnswers.push(numericAnswer);
+            }
+            
             const feedbackElement = document.getElementById('feedback');
             
-            if (normalizedUser === normalizedCorrect) {
+            if (acceptedAnswers.includes(normalizedUser) || (gameMode === 'listening' && userAnswer.trim() === currentNumber.toString())) {
                 correctCount++;
                 totalCount++;
                 feedbackElement.textContent = '✓ Correct! Well done!';
@@ -382,14 +586,33 @@
             } else {
                 incorrectCount++;
                 totalCount++;
-                feedbackElement.textContent = `✗ Incorrect. The correct answer is: "${currentAnswer}"`;
+                
+                // Mostrar ambas as variações aceitas se existirem
+                let correctDisplay = acceptedAnswers.length > 1 
+                    ? `"${acceptedAnswers[0]}" or "${acceptedAnswers[1]}"` 
+                    : `"${acceptedAnswers[0]}"`;
+                
+                // Add numeric option for listening mode
+                if (gameMode === 'listening') {
+                    correctDisplay += ` or "${currentNumber}"`;
+                }
+                    
+                feedbackElement.textContent = `✗ Incorrect. The correct answer is: ${correctDisplay}. Try again!`;
                 feedbackElement.className = 'feedback incorrect';
                 
                 updateScores();
                 
+                // Limpar o campo e manter o mesmo número para nova tentativa
                 setTimeout(() => {
-                    generateNewNumber();
-                }, 1500);
+                    if (gameMode === 'writing') {
+                        document.getElementById('answerInput').value = '';
+                        document.getElementById('answerInput').focus();
+                    } else if (gameMode === 'listening') {
+                        document.getElementById('listeningInput').value = '';
+                        document.getElementById('listeningInput').focus();
+                    }
+                    hideFeedback();
+                }, 2000);
             }
         }
 
@@ -416,8 +639,166 @@
             document.getElementById(screenId).classList.add('active');
         }
 
+        function showModeScreen(mode) {
+            gameMode = mode;
+            const modeTitle = document.getElementById('modeTitle');
+            const modeInstruction = document.getElementById('modeInstruction');
+            
+            switch(mode) {
+                case 'writing':
+                    modeTitle.textContent = 'Writing Mode';
+                    modeInstruction.innerHTML = '✍️ Choose a number range and write the numbers in English!';
+                    break;
+                case 'speaking':
+                    modeTitle.textContent = 'Speaking Mode';
+                    modeInstruction.innerHTML = '🗣️ Choose a number range and speak the numbers aloud!';
+                    break;
+                case 'listening':
+                    modeTitle.textContent = 'Listening Mode';
+                    modeInstruction.innerHTML = '👂 Choose a number range and listen to the numbers!';
+                    break;
+            }
+            
+            showScreen('difficultyScreen');
+        }
+
+        function setupGameMode() {
+            const writingControls = document.getElementById('writingControls');
+            const speakingControls = document.getElementById('speakingControls');
+            const listeningControls = document.getElementById('listeningControls');
+            const numberDisplay = document.getElementById('numberDisplay');
+            const gameInstruction = document.getElementById('gameInstruction');
+            const checkBtn = document.getElementById('checkBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            // Hide all controls first
+            writingControls.style.display = 'none';
+            speakingControls.style.display = 'none';
+            listeningControls.style.display = 'none';
+            
+            switch(gameMode) {
+                case 'writing':
+                    writingControls.style.display = 'block';
+                    numberDisplay.style.display = 'block';
+                    gameInstruction.innerHTML = 'Write the number below in English and press Enter.<br><small style="opacity: 0.8;">Keep trying until you get it right!</small>';
+                    checkBtn.style.display = 'inline-block';
+                    nextBtn.style.display = 'none';
+                    break;
+                    
+                case 'speaking':
+                    speakingControls.style.display = 'block';
+                    numberDisplay.style.display = 'block';
+                    gameInstruction.innerHTML = 'Say the number shown below aloud.<br><small style="opacity: 0.8;">Click the microphone and speak clearly!</small>';
+                    checkBtn.style.display = 'none';
+                    nextBtn.style.display = 'inline-block';
+                    setupSpeechRecognition();
+                    break;
+                    
+                case 'listening':
+                    listeningControls.style.display = 'block';
+                    numberDisplay.style.display = 'none';
+                    gameInstruction.innerHTML = 'Listen to the number and write what you hear.<br><small style="opacity: 0.8;">Click play to hear the number!</small>';
+                    checkBtn.style.display = 'inline-block';
+                    nextBtn.style.display = 'none';
+                    break;
+            }
+        }
+
+        function setupSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'en-US';
+                
+                recognition.onresult = function(event) {
+                    const spoken = event.results[0][0].transcript.toLowerCase().trim();
+                    checkSpokenAnswer(spoken);
+                };
+                
+                recognition.onerror = function(event) {
+                    document.getElementById('feedback').textContent = 'Speech recognition error. Please try again.';
+                    document.getElementById('feedback').className = 'feedback incorrect';
+                    document.getElementById('startSpeaking').classList.remove('recording');
+                };
+                
+                recognition.onend = function() {
+                    document.getElementById('startSpeaking').classList.remove('recording');
+                };
+            }
+        }
+
+        function startSpeechRecognition() {
+            if (recognition) {
+                document.getElementById('startSpeaking').classList.add('recording');
+                recognition.start();
+            } else {
+                alert('Speech recognition is not supported in your browser.');
+            }
+        }
+
+        function playNumberAudio() {
+            if (speechSynthesis) {
+                const utterance = new SpeechSynthesisUtterance(currentAnswer);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.8;
+                speechSynthesis.speak(utterance);
+            } else {
+                alert('Speech synthesis is not supported in your browser.');
+            }
+        }
+
+        function checkSpokenAnswer(spoken) {
+            const normalizedSpoken = normalizeAnswer(spoken);
+            const normalizedCorrect = normalizeAnswer(currentAnswer);
+            
+            // Create accepted answers variants
+            const acceptedAnswers = [normalizedCorrect];
+            const oneVariant = normalizedCorrect
+                .replace(/\ba hundred\b/g, 'one hundred')
+                .replace(/\ba thousand\b/g, 'one thousand')
+                .replace(/\ba million\b/g, 'one million');
+            
+            if (oneVariant !== normalizedCorrect) {
+                acceptedAnswers.push(oneVariant);
+            }
+            
+            // Also accept the numeric form (e.g., "14" for "fourteen")
+            const numericAnswer = currentNumber.toString();
+            acceptedAnswers.push(numericAnswer);
+            
+            const feedbackElement = document.getElementById('feedback');
+            
+            if (acceptedAnswers.includes(normalizedSpoken) || spoken.trim() === numericAnswer) {
+                correctCount++;
+                totalCount++;
+                feedbackElement.textContent = '✓ Correct! Well done!';
+                feedbackElement.className = 'feedback correct';
+                updateScores();
+                
+                // Auto-advance to next number after showing feedback
+                setTimeout(() => {
+                    generateNewNumber();
+                }, 1000);
+            } else {
+                incorrectCount++;
+                totalCount++;
+                const correctDisplay = acceptedAnswers.length > 1 
+                    ? `"${acceptedAnswers[0]}" or "${acceptedAnswers[1]}" or "${numericAnswer}"` 
+                    : `"${acceptedAnswers[0]}" or "${numericAnswer}"`;
+                feedbackElement.textContent = `✗ You said: "${spoken}". Correct: ${correctDisplay}`;
+                feedbackElement.className = 'feedback incorrect';
+                updateScores();
+            }
+        }
+
         function backToStart() {
             showScreen('startScreen');
+        }
+
+        function backToDifficulty() {
+            showScreen('difficultyScreen');
         }
 
         function backToMainMenu() {
