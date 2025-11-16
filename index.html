@@ -85,7 +85,7 @@
         function createGameCard(game) {
             const card = document.createElement('div');
             card.className = 'game-card';
-            card.onclick = () => playGame(game.id, game.engine);
+            card.onclick = () => playGame(game.id, game.component);
             
             const difficultyCount = game.difficulties ? game.difficulties.length : (game.modes ? game.modes.length : 0);
             const levelIndicators = Array(difficultyCount).fill('<div class="level-indicator"></div>').join('');
@@ -100,7 +100,7 @@
                 } else if (game.conversionType === 'cardinal') {
                     subtitle = `Numbers from ${firstDiff.min.toLocaleString()} to ${lastDiff.max.toLocaleString()}`;
                 }
-            } else if (game.engine === 'sentence-practice-engine') {
+            } else if (game.component === 'sentence.component') {
                 subtitle = 'Contextual sentence practice';
             }
             
@@ -159,13 +159,13 @@
             });
         }
 
-        function playGame(gameId, engine) {
+        function playGame(gameId, component) {
             const targetCard = event.currentTarget;
             targetCard.style.transform = 'scale(0.95)';
             targetCard.style.opacity = '0.8';
             
             setTimeout(() => {
-                window.location.href = `./engines/${engine}.html?game=${gameId}`;
+                window.location.href = `./components/${component}.html?game=${gameId}`;
             }, 150);
         }
 

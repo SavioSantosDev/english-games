@@ -1,6 +1,7 @@
 {
   "id": "02.ordinal-numbers",
-  "engine": "number-practice-engine",
+  "component": "number.component",
+  "converterScript": "../js/converters/number-converter.js",
   "title": "Ordinal Numbers",
   "subtitle": "Practice English Ordinal Numbers",
   "icon": "🏆",

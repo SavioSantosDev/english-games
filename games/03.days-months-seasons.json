@@ -1,6 +1,6 @@
 {
   "id": "03.days-months-seasons",
-  "engine": "sentence-practice-engine",
+  "component": "sentence.component",
   "title": "Days, Months & Seasons",
   "subtitle": "Practice English with advanced contextual sentences",
   "icon": "📅",

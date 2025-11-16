@@ -1,6 +1,7 @@
 {
   "id": "01.cardinal-numbers",
-  "engine": "number-practice-engine",
+  "component": "number.component",
+  "converterScript": "../js/converters/number-converter.js",
   "title": "Cardinal Numbers",
   "subtitle": "Practice English Numbers",
   "icon": "🎮",

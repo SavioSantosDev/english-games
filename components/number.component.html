@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">Number Practice Game</title>
+    <title id="pageTitle">Practice Game</title>
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body id="gameBody" class="theme-purple">
     <div class="container">
-        <!-- Tela Inicial -->
+        <!-- Start Screen -->
         <div id="startScreen" class="screen active">
             <h1 id="gameTitle">🎮 Loading...</h1>
             <p class="subtitle" id="gameSubtitle">Practice Game</p>
@@ -26,9 +26,9 @@
             </div>
         </div>
 
-        <!-- Tela de Seleção de Dificuldade -->
+        <!-- Difficulty Selection Screen -->
         <div id="difficultyScreen" class="screen">
-            <h1 id="gameTitle2">🎮 Game</h1>
+            <h1 id="gameTitleDifficulty">🎮 Game</h1>
             <p class="subtitle" id="modeTitle">Mode</p>
             
             <div class="instruction" id="modeInstruction">
@@ -45,9 +45,9 @@
             </div>
         </div>
 
-        <!-- Tela do Jogo -->
+        <!-- Game Screen -->
         <div id="gameScreen" class="screen">
-            <h1 id="gameTitle3">🎮 Game</h1>
+            <h1 id="gameTitlePlay">🎮 Game</h1>
             
             <div class="score-board">
                 <div class="score-item">
@@ -68,17 +68,17 @@
                 Practice and press Enter.
             </div>
 
-            <div class="number-display" id="numberDisplay">0</div>
+            <div class="challenge-display" id="challengeDisplay">-</div>
 
             <!-- Speaking Mode Controls -->
             <div id="speakingControls" class="input-group" style="display: none;">
                 <button id="startSpeaking" onclick="startSpeechRecognition()" class="speech-button">🎤 Start Speaking</button>
-                <button id="playAudio" onclick="playNumberAudio()" class="speech-button">🔊 Repeat Number</button>
+                <button id="playAudio" onclick="playAudio()" class="speech-button">🔊 Repeat</button>
             </div>
 
             <!-- Listening Mode Controls -->
             <div id="listeningControls" class="input-group" style="display: none;">
-                <button id="playListening" onclick="playNumberAudio()" class="speech-button">🔊 Play Number</button>
+                <button id="playListening" onclick="playAudio()" class="speech-button">🔊 Play</button>
                 <div style="margin-top: 15px;">
                     <input 
                         type="text" 
@@ -105,7 +105,7 @@
 
             <div class="button-group">
                 <button class="btn-primary" id="checkBtn" onclick="checkAnswer()">✓ Check Answer</button>
-                <button class="btn-primary" id="nextBtn" onclick="generateNewNumber()" style="display: none;">→ Next Number</button>
+                <button class="btn-primary" id="nextBtn" onclick="generateNewChallenge()" style="display: none;">→ Next</button>
                 <button class="btn-secondary" onclick="backToDifficulty()">← Back to Difficulty</button>
                 <button class="btn-secondary" onclick="backToMainMenu()">← Main Menu</button>
             </div>
@@ -118,11 +118,12 @@
         // ============================================
         let gameConfig = null;
         let configLoaded = false;
+        let converterFunctions = {};
 
         // ============================================
         // GAME STATE
         // ============================================
-        let currentNumber = 0;
+        let currentValue = 0;
         let minRange = 1;
         let maxRange = 20;
         let correctCount = 0;
@@ -154,7 +155,11 @@
                 gameConfig = await response.json();
                 configLoaded = true;
                 
-                // Apply game configuration
+                // Load converter functions if specified
+                if (gameConfig.converterScript) {
+                    await loadConverterScript(gameConfig.converterScript);
+                }
+                
                 applyGameConfig();
             } catch (error) {
                 console.error('Error loading game configuration:', error);
@@ -163,20 +168,33 @@
             }
         }
 
+        async function loadConverterScript(scriptPath) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = scriptPath;
+                script.onload = () => {
+                    if (window.gameConverters) {
+                        converterFunctions = window.gameConverters;
+                    }
+                    resolve();
+                };
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
         // ============================================
         // APPLY CONFIGURATION TO UI
         // ============================================
         function applyGameConfig() {
-            // Set title and theme
             document.getElementById('pageTitle').textContent = `${gameConfig.title} - English Practice`;
             document.getElementById('gameTitle').textContent = `${gameConfig.icon} ${gameConfig.title}`;
-            document.getElementById('gameTitle2').textContent = `${gameConfig.icon} ${gameConfig.title}`;
-            document.getElementById('gameTitle3').textContent = `${gameConfig.icon} ${gameConfig.title}`;
+            document.getElementById('gameTitleDifficulty').textContent = `${gameConfig.icon} ${gameConfig.title}`;
+            document.getElementById('gameTitlePlay').textContent = `${gameConfig.icon} ${gameConfig.title}`;
             document.getElementById('gameSubtitle').textContent = gameConfig.subtitle;
             document.getElementById('gameOverview').innerHTML = gameConfig.overview;
             document.getElementById('gameBody').className = gameConfig.theme;
 
-            // Load modes
             const modesGrid = document.getElementById('modesGrid');
             modesGrid.innerHTML = '';
             
@@ -193,160 +211,52 @@
         }
 
         // ============================================
-        // NUMBER CONVERSION FUNCTIONS
+        // VALUE CONVERSION AND DISPLAY
         // ============================================
-        function convertNumber(num) {
-            if (gameConfig.conversionType === 'cardinal') {
-                return numberToWords(num);
-            } else if (gameConfig.conversionType === 'ordinal') {
-                return numberToOrdinal(num);
+        function convertValue(value) {
+            if (converterFunctions.convertToAnswer) {
+                return converterFunctions.convertToAnswer(value, gameConfig);
             }
-            return num.toString();
+            return value.toString();
         }
 
-        function displayNumber(num) {
-            if (gameConfig.displayType === 'numeric') {
-                return num.toLocaleString();
-            } else if (gameConfig.displayType === 'ordinal-suffix') {
-                return numberToOrdinalSuffix(num);
+        function displayValue(value) {
+            if (converterFunctions.displayValue) {
+                return converterFunctions.displayValue(value, gameConfig);
             }
-            return num.toString();
-        }
-
-        function numberToWords(num) {
-            const ones = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
-            const teens = ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
-            const tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
-            
-            if (num === 0) return 'zero';
-            
-            if (num < 10) return ones[num];
-            if (num < 20) return teens[num - 10];
-            if (num < 100) {
-                return tens[Math.floor(num / 10)] + (num % 10 !== 0 ? '-' + ones[num % 10] : '');
-            }
-            if (num < 1000) {
-                const hundreds = Math.floor(num / 100);
-                const remainder = num % 100;
-                const hundredText = hundreds === 1 ? 'a hundred' : ones[hundreds] + ' hundred';
-                return hundredText + (remainder !== 0 ? ' and ' + numberToWords(remainder) : '');
-            }
-            if (num < 1000000) {
-                const thousands = Math.floor(num / 1000);
-                const remainder = num % 1000;
-                const thousandText = thousands === 1 ? 'a thousand' : numberToWords(thousands) + ' thousand';
-                return thousandText + (remainder !== 0 ? ' ' + numberToWords(remainder) : '');
-            }
-            if (num < 1000000000) {
-                const millions = Math.floor(num / 1000000);
-                const remainder = num % 1000000;
-                const millionText = millions === 1 ? 'a million' : numberToWords(millions) + ' million';
-                return millionText + (remainder !== 0 ? ' ' + numberToWords(remainder) : '');
-            }
-            
-            return num.toString();
-        }
-
-        function numberToOrdinal(num) {
-            const ones = ['', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth'];
-            const teens = ['tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 
-                          'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth'];
-            const tens = ['', '', 'twentieth', 'thirtieth', 'fortieth', 'fiftieth', 
-                         'sixtieth', 'seventieth', 'eightieth', 'ninetieth'];
-            
-            if (num === 0) return 'zeroth';
-            
-            if (num < 10) return ones[num];
-            if (num < 20) return teens[num - 10];
-            if (num < 100) {
-                if (num % 10 === 0) {
-                    return tens[Math.floor(num / 10)];
-                } else {
-                    const tensPlace = Math.floor(num / 10);
-                    const onesPlace = num % 10;
-                    return tens[tensPlace].replace('ieth', 'y-') + ones[onesPlace];
-                }
-            }
-            if (num < 1000) {
-                const hundreds = Math.floor(num / 100);
-                const remainder = num % 100;
-                const hundredText = hundreds === 1 ? 'a hundred' : ones[hundreds] + ' hundred';
-                if (remainder === 0) {
-                    return hundredText + 'th';
-                } else {
-                    return hundredText + ' and ' + numberToOrdinal(remainder);
-                }
-            }
-            if (num < 1000000) {
-                const thousands = Math.floor(num / 1000);
-                const remainder = num % 1000;
-                const thousandText = thousands === 1 ? 'a thousand' : numberToWords(thousands) + ' thousand';
-                
-                if (remainder === 0) {
-                    return thousandText + 'th';
-                } else {
-                    return thousandText + ' ' + numberToOrdinal(remainder);
-                }
-            }
-            if (num < 1000000000) {
-                const millions = Math.floor(num / 1000000);
-                const remainder = num % 1000000;
-                const millionText = millions === 1 ? 'a million' : numberToWords(millions) + ' million';
-                
-                if (remainder === 0) {
-                    return millionText + 'th';
-                } else {
-                    return millionText + ' ' + numberToOrdinal(remainder);
-                }
-            }
-            
-            return num.toString() + 'th';
-        }
-
-        function numberToOrdinalSuffix(num) {
-            const lastTwoDigits = num % 100;
-            const lastDigit = num % 10;
-            
-            const formattedNum = num.toLocaleString();
-            
-            if (lastTwoDigits >= 11 && lastTwoDigits <= 13) {
-                return formattedNum + 'th';
-            }
-            
-            switch (lastDigit) {
-                case 1: return formattedNum + 'st';
-                case 2: return formattedNum + 'nd';
-                case 3: return formattedNum + 'rd';
-                default: return formattedNum + 'th';
-            }
+            return value.toString();
         }
 
         // ============================================
-        // RANDOM NUMBER GENERATION
+        // RANDOM VALUE GENERATION
         // ============================================
-        function getRandomNumber(min, max) {
+        function getRandomValue(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
 
-        function getSmartRandomNumber(min, max) {
+        function getSmartRandomValue(min, max) {
+            if (converterFunctions.getSmartRandom) {
+                return converterFunctions.getSmartRandom(min, max);
+            }
+            
             if (max <= 100) {
-                return getRandomNumber(min, max);
+                return getRandomValue(min, max);
             }
             
             const rand = Math.random();
             
             if (max <= 999999) {
-                if (rand < 0.15) return getRandomNumber(1, Math.min(99, max));
-                else if (rand < 0.35) return getRandomNumber(100, Math.min(999, max));
-                else if (rand < 0.70) return getRandomNumber(1000, Math.min(99999, max));
-                else return getRandomNumber(100000, max);
+                if (rand < 0.15) return getRandomValue(1, Math.min(99, max));
+                else if (rand < 0.35) return getRandomValue(100, Math.min(999, max));
+                else if (rand < 0.70) return getRandomValue(1000, Math.min(99999, max));
+                else return getRandomValue(100000, max);
             } else {
-                if (rand < 0.10) return getRandomNumber(1, 99);
-                else if (rand < 0.15) return getRandomNumber(100, 999);
-                else if (rand < 0.30) return getRandomNumber(1000, 99999);
-                else if (rand < 0.60) return getRandomNumber(100000, 999999);
-                else if (rand < 0.85) return getRandomNumber(1000000, 99999999);
-                else return getRandomNumber(100000000, max);
+                if (rand < 0.10) return getRandomValue(1, 99);
+                else if (rand < 0.15) return getRandomValue(100, 999);
+                else if (rand < 0.30) return getRandomValue(1000, 99999);
+                else if (rand < 0.60) return getRandomValue(100000, 999999);
+                else if (rand < 0.85) return getRandomValue(1000000, 99999999);
+                else return getRandomValue(100000000, max);
             }
         }
 
@@ -363,13 +273,13 @@
             updateScores();
             showScreen('gameScreen');
             setupGameMode();
-            generateNewNumber();
+            generateNewChallenge();
         }
 
-        function generateNewNumber() {
-            currentNumber = getSmartRandomNumber(minRange, maxRange);
-            currentAnswer = convertNumber(currentNumber);
-            document.getElementById('numberDisplay').textContent = displayNumber(currentNumber);
+        function generateNewChallenge() {
+            currentValue = getSmartRandomValue(minRange, maxRange);
+            currentAnswer = convertValue(currentValue);
+            document.getElementById('challengeDisplay').textContent = displayValue(currentValue);
             
             if (gameMode === 'writing') {
                 document.getElementById('answerInput').value = '';
@@ -383,6 +293,10 @@
         }
 
         function normalizeAnswer(text) {
+            if (converterFunctions.normalizeAnswer) {
+                return converterFunctions.normalizeAnswer(text);
+            }
+            
             return text.toLowerCase()
                 .trim()
                 .replace(/\s+/g, ' ')
@@ -397,20 +311,12 @@
                 .replace(/\bone hundred and\b/g, 'a hundred and');
         }
 
-        function checkAnswer() {
-            let userAnswer = '';
-            
-            if (gameMode === 'writing') {
-                userAnswer = document.getElementById('answerInput').value;
-            } else if (gameMode === 'listening') {
-                userAnswer = document.getElementById('listeningInput').value;
-            } else {
-                return;
+        function getAcceptedAnswers(correctAnswer) {
+            if (converterFunctions.getAcceptedAnswers) {
+                return converterFunctions.getAcceptedAnswers(correctAnswer, currentValue, gameMode, gameConfig);
             }
             
-            const normalizedUser = normalizeAnswer(userAnswer);
-            const normalizedCorrect = normalizeAnswer(currentAnswer);
-            
+            const normalizedCorrect = normalizeAnswer(correctAnswer);
             const acceptedAnswers = [normalizedCorrect];
             
             const oneVariant = normalizedCorrect
@@ -427,8 +333,25 @@
             }
             
             if (gameMode === 'listening') {
-                acceptedAnswers.push(displayNumber(currentNumber).toLowerCase());
+                acceptedAnswers.push(displayValue(currentValue).toLowerCase());
             }
+            
+            return acceptedAnswers;
+        }
+
+        function checkAnswer() {
+            let userAnswer = '';
+            
+            if (gameMode === 'writing') {
+                userAnswer = document.getElementById('answerInput').value;
+            } else if (gameMode === 'listening') {
+                userAnswer = document.getElementById('listeningInput').value;
+            } else {
+                return;
+            }
+            
+            const normalizedUser = normalizeAnswer(userAnswer);
+            const acceptedAnswers = getAcceptedAnswers(currentAnswer);
             
             const feedbackElement = document.getElementById('feedback');
             
@@ -441,7 +364,7 @@
                 updateScores();
                 
                 setTimeout(() => {
-                    generateNewNumber();
+                    generateNewChallenge();
                 }, 600);
             } else {
                 incorrectCount++;
@@ -503,7 +426,6 @@
             document.getElementById('modeTitle').textContent = mode.name;
             document.getElementById('modeInstruction').innerHTML = mode.instruction;
             
-            // Load difficulties
             const difficultiesGrid = document.getElementById('difficultiesGrid');
             difficultiesGrid.innerHTML = '';
             
@@ -525,7 +447,7 @@
             const writingControls = document.getElementById('writingControls');
             const speakingControls = document.getElementById('speakingControls');
             const listeningControls = document.getElementById('listeningControls');
-            const numberDisplay = document.getElementById('numberDisplay');
+            const challengeDisplay = document.getElementById('challengeDisplay');
             const gameInstruction = document.getElementById('gameInstruction');
             const checkBtn = document.getElementById('checkBtn');
             const nextBtn = document.getElementById('nextBtn');
@@ -539,7 +461,7 @@
             switch(gameMode) {
                 case 'writing':
                     writingControls.style.display = 'block';
-                    numberDisplay.style.display = 'block';
+                    challengeDisplay.style.display = 'block';
                     gameInstruction.innerHTML = mode.gameInstruction;
                     checkBtn.style.display = 'inline-block';
                     nextBtn.style.display = 'none';
@@ -547,7 +469,7 @@
                     
                 case 'speaking':
                     speakingControls.style.display = 'block';
-                    numberDisplay.style.display = 'block';
+                    challengeDisplay.style.display = 'block';
                     gameInstruction.innerHTML = mode.gameInstruction;
                     checkBtn.style.display = 'none';
                     nextBtn.style.display = 'inline-block';
@@ -556,7 +478,7 @@
                     
                 case 'listening':
                     listeningControls.style.display = 'block';
-                    numberDisplay.style.display = 'none';
+                    challengeDisplay.style.display = 'none';
                     gameInstruction.innerHTML = mode.gameInstruction;
                     checkBtn.style.display = 'inline-block';
                     nextBtn.style.display = 'none';
@@ -598,7 +520,7 @@
             }
         }
 
-        function playNumberAudio() {
+        function playAudio() {
             if (speechSynthesis) {
                 const utterance = new SpeechSynthesisUtterance(currentAnswer);
                 utterance.lang = 'en-US';
@@ -611,28 +533,11 @@
 
         function checkSpokenAnswer(spoken) {
             const normalizedSpoken = normalizeAnswer(spoken);
-            const normalizedCorrect = normalizeAnswer(currentAnswer);
-            
-            const acceptedAnswers = [normalizedCorrect];
-            const oneVariant = normalizedCorrect
-                .replace(/\ba hundred\b/g, 'one hundred')
-                .replace(/\ba thousand\b/g, 'one thousand')
-                .replace(/\ba million\b/g, 'one million')
-                .replace(/\ba hundredth\b/g, 'one hundredth')
-                .replace(/\ba thousandth\b/g, 'one thousandth')
-                .replace(/\ba millionth\b/g, 'one millionth')
-                .replace(/\ba hundred and\b/g, 'one hundred and');
-            
-            if (oneVariant !== normalizedCorrect) {
-                acceptedAnswers.push(oneVariant);
-            }
-            
-            const numericAnswer = displayNumber(currentNumber).toLowerCase();
-            acceptedAnswers.push(numericAnswer);
+            const acceptedAnswers = getAcceptedAnswers(currentAnswer);
             
             const feedbackElement = document.getElementById('feedback');
             
-            if (acceptedAnswers.includes(normalizedSpoken) || spoken.trim() === numericAnswer) {
+            if (acceptedAnswers.includes(normalizedSpoken)) {
                 correctCount++;
                 totalCount++;
                 feedbackElement.textContent = '✓ Correct! Well done!';
@@ -640,14 +545,14 @@
                 updateScores();
                 
                 setTimeout(() => {
-                    generateNewNumber();
+                    generateNewChallenge();
                 }, 1000);
             } else {
                 incorrectCount++;
                 totalCount++;
                 const correctDisplay = acceptedAnswers.length > 1 
-                    ? `"${acceptedAnswers[0]}" or "${acceptedAnswers[1]}" or "${numericAnswer}"` 
-                    : `"${acceptedAnswers[0]}" or "${numericAnswer}"`;
+                    ? `"${acceptedAnswers[0]}" or "${acceptedAnswers[1]}"` 
+                    : `"${acceptedAnswers[0]}"`;
                 feedbackElement.textContent = `✗ You said: "${spoken}". Correct: ${correctDisplay}`;
                 feedbackElement.className = 'feedback incorrect';
                 updateScores();

@@ -73,7 +73,8 @@
     color: #721c24;
 }
 
-/* Number Display (for number games) */
+/* Challenge Display (for value-based games) */
+.challenge-display,
 .number-display {
     font-size: 4em;
     font-weight: bold;
@@ -126,6 +127,7 @@
         gap: 8px;
     }
     
+    .challenge-display,
     .number-display {
         font-size: 3em;
         padding: 30px;

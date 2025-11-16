@@ -24,6 +24,7 @@
     color: #cc5500;
 }
 
+.theme-orange .challenge-display,
 .theme-orange .number-display {
     background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
     color: #8b4513;
