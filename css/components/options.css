@@ -1,0 +1,65 @@
+/* ============================================
+   OPTIONS
+   Multiple choice options and selections
+   ============================================ */
+
+.options-container {
+    display: grid;
+    gap: 12px;
+}
+
+.option-button {
+    padding: 18px;
+    border: 2px solid #e0e0e0;
+    background: white;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.1em;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.option-button:hover {
+    border-color: var(--primary-color, #667eea);
+    background: var(--primary-light, #f8f9ff);
+    transform: translateX(5px);
+}
+
+.option-button.selected {
+    border-color: var(--primary-color, #667eea);
+    background: var(--primary-color, #667eea);
+    color: white;
+}
+
+.option-button.correct {
+    border-color: #28a745;
+    background: #d4edda;
+    color: #155724;
+}
+
+.option-button.incorrect {
+    border-color: #dc3545;
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.option-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.option-label {
+    font-weight: 700;
+    min-width: 30px;
+}
+
+/* Exercise Container */
+.exercise-container {
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}

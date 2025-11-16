@@ -1,0 +1,69 @@
+/* ============================================
+   THEME: PURPLE
+   Purple gradient theme
+   ============================================ */
+
+.theme-purple {
+    --primary-color: #667eea;
+    --primary-dark: #764ba2;
+    --primary-light: #f8f9ff;
+    --primary-shadow: rgba(102, 126, 234, 0.3);
+    --primary-shadow-hover: rgba(102, 126, 234, 0.4);
+}
+
+.theme-purple {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.theme-purple h1 {
+    color: #667eea;
+}
+
+.theme-purple .instruction {
+    background: #e7f3ff;
+    color: #004085;
+}
+
+/* Responsive expand container for home page */
+.theme-purple.page-home .container {
+    max-width: 800px;
+    padding: 50px;
+}
+
+.theme-purple.page-home h1 {
+    color: #333;
+    font-size: 3.5em;
+    margin-bottom: 15px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.theme-purple.page-home {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #ffecd2 100%);
+}
+
+/* Game card hover effects for home page */
+.theme-purple.page-home .game-card:nth-child(1):hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.theme-purple.page-home .game-card:nth-child(2):hover {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ffa726 100%);
+    color: white;
+}
+
+.theme-purple.page-home .game-card:nth-child(3):hover {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+}
+
+/* Responsive home */
+@media (max-width: 600px) {
+    .theme-purple.page-home .container {
+        padding: 30px 20px;
+    }
+    
+    .theme-purple.page-home h1 {
+        font-size: 2.5em;
+    }
+}

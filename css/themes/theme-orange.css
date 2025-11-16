@@ -1,0 +1,31 @@
+/* ============================================
+   THEME: ORANGE
+   Orange/peach gradient theme
+   ============================================ */
+
+.theme-orange {
+    --primary-color: #ff6b6b;
+    --primary-dark: #ffa726;
+    --primary-light: #fff5e6;
+    --primary-shadow: rgba(255, 107, 107, 0.3);
+    --primary-shadow-hover: rgba(255, 107, 107, 0.4);
+}
+
+.theme-orange {
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+}
+
+.theme-orange h1 {
+    color: #ff6b6b;
+}
+
+.theme-orange .instruction {
+    background: #fff5e6;
+    color: #cc5500;
+}
+
+.theme-orange .number-display {
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    color: #8b4513;
+    box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+}

@@ -4,264 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cardinal Numbers Game - English Practice</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            padding: 40px;
-            max-width: 600px;
-            width: 100%;
-        }
-
-        h1 {
-            color: #667eea;
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 2.5em;
-        }
-
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 1.1em;
-        }
-
-        .screen {
-            display: none;
-        }
-
-        .screen.active {
-            display: block;
-        }
-
-        .range-selector {
-            margin: 30px 0;
-        }
-
-        .range-option {
-            background: #f5f5f5;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 15px 0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-
-        .range-option:hover {
-            background: #667eea;
-            border-color: #667eea;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        .range-option h3 {
-            font-size: 1.3em;
-            margin-bottom: 5px;
-        }
-
-        .range-option p {
-            font-size: 0.9em;
-            opacity: 0.8;
-        }
-
-        .game-area {
-            text-align: center;
-        }
-
-        .score-board {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: #f5f5f5;
-            border-radius: 10px;
-        }
-
-        .score-item {
-            text-align: center;
-        }
-
-        .score-label {
-            font-size: 0.9em;
-            color: #666;
-            margin-bottom: 5px;
-        }
-
-        .score-value {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: #667eea;
-        }
-
-        .number-display {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-size: 4em;
-            font-weight: bold;
-            padding: 40px;
-            border-radius: 15px;
-            margin: 30px 0;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-        }
-
-        .input-group {
-            margin: 30px 0;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 15px 20px;
-            font-size: 1.2em;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            outline: none;
-            transition: border-color 0.3s ease;
-        }
-
-        input[type="text"]:focus {
-            border-color: #667eea;
-        }
-
-        .feedback {
-            margin: 20px 0;
-            padding: 15px;
-            border-radius: 10px;
-            font-weight: bold;
-            text-align: center;
-            min-height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .feedback.correct {
-            background: #d4edda;
-            color: #155724;
-            border: 2px solid #c3e6cb;
-        }
-
-        .feedback.incorrect {
-            background: #f8d7da;
-            color: #721c24;
-            border: 2px solid #f5c6cb;
-        }
-
-        .feedback.hidden {
-            opacity: 0;
-        }
-
-        button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.1em;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            font-weight: bold;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        .button-group {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .secondary-button {
-            background: #6c757d;
-        }
-
-        .instruction {
-            background: #e7f3ff;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
-            color: #004085;
-            border-left: 4px solid #667eea;
-        }
-
-        .speech-button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.1em;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            font-weight: bold;
-            margin: 0 10px 15px 10px;
-            min-width: 180px;
-        }
-
-        .speech-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .speech-button:active {
-            transform: translateY(0);
-        }
-
-        .speech-button.recording {
-            background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.7; }
-            100% { opacity: 1; }
-        }
-
-        #listeningInput {
-            width: 100%;
-            padding: 15px 20px;
-            font-size: 1.2em;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            outline: none;
-            transition: border-color 0.3s ease;
-        }
-
-        #listeningInput:focus {
-            border-color: #667eea;
-        }
-    </style>
+    <link rel="stylesheet" href="../../css/styles.css">
 </head>
-<body>
+<body class="theme-purple">
     <div class="container">
         <!-- Tela Inicial -->
         <div id="startScreen" class="screen active">
@@ -272,25 +17,25 @@
                 🎯 Choose your practice mode:
             </div>
 
-            <div class="range-selector">
-                <div class="range-option" onclick="showModeScreen('writing')">
+            <div class="selector-grid">
+                <div class="selector-option" onclick="showModeScreen('writing')">
                     <h3>✍️ Writing Mode</h3>
                     <p>See numbers and write them in English</p>
                 </div>
                 
-                <div class="range-option" onclick="showModeScreen('speaking')">
+                <div class="selector-option" onclick="showModeScreen('speaking')">
                     <h3>🗣️ Speaking Mode</h3>
                     <p>See numbers and speak them aloud</p>
                 </div>
                 
-                <div class="range-option" onclick="showModeScreen('listening')">
+                <div class="selector-option" onclick="showModeScreen('listening')">
                     <h3>👂 Listening Mode</h3>
                     <p>Listen to numbers and write what you hear</p>
                 </div>
             </div>
 
             <div class="button-group">
-                <button class="secondary-button" onclick="backToMainMenu()">← Back to Main Menu</button>
+                <button class="btn-secondary" onclick="backToMainMenu()">← Back to Main Menu</button>
             </div>
         </div>
 
@@ -303,31 +48,31 @@
                 📝 Choose a number range and write the numbers in English!
             </div>
 
-            <div class="range-selector">
-                <div class="range-option" onclick="startGame(1, 20)">
+            <div class="selector-grid">
+                <div class="selector-option" onclick="startGame(1, 20)">
                     <h3>🟢 Easy</h3>
                     <p>Numbers from 1 to 20</p>
                 </div>
                 
-                <div class="range-option" onclick="startGame(1, 100)">
+                <div class="selector-option" onclick="startGame(1, 100)">
                     <h3>🟡 Medium</h3>
                     <p>Numbers from 1 to 100</p>
                 </div>
                 
-                <div class="range-option" onclick="startGame(1, 999999)">
+                <div class="selector-option" onclick="startGame(1, 999999)">
                     <h3>🔴 Hard</h3>
                     <p>Numbers from 1 to 999,999</p>
                 </div>
                 
-                <div class="range-option" onclick="startGame(1, 999999999)">
+                <div class="selector-option" onclick="startGame(1, 999999999)">
                     <h3>🔥 Expert</h3>
                     <p>Numbers from 1 to 999,999,999</p>
                 </div>
             </div>
 
             <div class="button-group">
-                <button class="secondary-button" onclick="backToStart()">← Back to Modes</button>
-                <button class="secondary-button" onclick="backToMainMenu()">← Main Menu</button>
+                <button class="btn-secondary" onclick="backToStart()">← Back to Modes</button>
+                <button class="btn-secondary" onclick="backToMainMenu()">← Main Menu</button>
             </div>
         </div>
 
@@ -342,11 +87,11 @@
                 </div>
                 <div class="score-item">
                     <div class="score-label">Incorrect</div>
-                    <div class="score-value" id="incorrectScore" style="color: #dc3545;">0</div>
+                    <div class="score-value incorrect" id="incorrectScore">0</div>
                 </div>
                 <div class="score-item">
                     <div class="score-label">Total</div>
-                    <div class="score-value" id="totalScore" style="color: #6c757d;">0</div>
+                    <div class="score-value total" id="totalScore">0</div>
                 </div>
             </div>
 
@@ -391,10 +136,10 @@
             <div id="feedback" class="feedback hidden"></div>
 
             <div class="button-group">
-                <button id="checkBtn" onclick="checkAnswer()">✓ Check Answer</button>
-                <button id="nextBtn" onclick="generateNewNumber()" style="display: none;">→ Next Number</button>
-                <button class="secondary-button" onclick="backToDifficulty()">← Back to Difficulty</button>
-                <button class="secondary-button" onclick="backToMainMenu()">← Main Menu</button>
+                <button class="btn-primary" id="checkBtn" onclick="checkAnswer()">✓ Check Answer</button>
+                <button class="btn-primary" id="nextBtn" onclick="generateNewNumber()" style="display: none;">→ Next Number</button>
+                <button class="btn-secondary" onclick="backToDifficulty()">← Back to Difficulty</button>
+                <button class="btn-secondary" onclick="backToMainMenu()">← Main Menu</button>
             </div>
         </div>
     </div>

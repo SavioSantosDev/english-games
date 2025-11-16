@@ -1,0 +1,26 @@
+/* ============================================
+   MAIN STYLES
+   Component-based CSS architecture
+   Single import file for all components
+   ============================================ */
+
+/* Base Components */
+@import url('./components/reset.css');
+@import url('./components/typography.css');
+@import url('./components/layout.css');
+@import url('./components/buttons.css');
+@import url('./components/inputs.css');
+@import url('./components/feedback.css');
+@import url('./components/animations.css');
+
+/* UI Components */
+@import url('./components/cards.css');
+@import url('./components/score-board.css');
+@import url('./components/options.css');
+@import url('./components/audio-controls.css');
+@import url('./components/microphone.css');
+
+/* Themes */
+@import url('./themes/theme-purple.css');
+@import url('./themes/theme-orange.css');
+@import url('./themes/theme-blue.css');

@@ -4,202 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>English Games - Language Learning Hub</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #ffecd2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .container {
-            background: white;
-            border-radius: 25px;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
-            padding: 50px;
-            max-width: 800px;
-            width: 100%;
-            text-align: center;
-        }
-
-        h1 {
-            color: #333;
-            font-size: 3.5em;
-            margin-bottom: 15px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .subtitle {
-            color: #666;
-            font-size: 1.3em;
-            margin-bottom: 20px;
-        }
-
-        .description {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            padding: 25px;
-            border-radius: 15px;
-            margin: 30px 0;
-            color: #495057;
-            font-size: 1.1em;
-            line-height: 1.6;
-            border-left: 5px solid #667eea;
-        }
-
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin: 40px 0;
-        }
-
-        .game-card {
-            background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
-            border: 2px solid #e9ecef;
-            border-radius: 20px;
-            padding: 30px;
-            cursor: pointer;
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .game-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-            border-color: transparent;
-        }
-
-        .game-card.cardinal:hover {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .game-card.ordinal:hover {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ffa726 100%);
-            color: white;
-        }
-
-        .game-icon {
-            font-size: 4em;
-            margin-bottom: 20px;
-            display: block;
-        }
-
-        .game-title {
-            font-size: 1.8em;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .game-description {
-            font-size: 1em;
-            opacity: 0.8;
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-
-        .game-levels {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-
-        .level-indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #dee2e6;
-            transition: background 0.3s ease;
-        }
-
-        .game-card:hover .level-indicator {
-            background: rgba(255, 255, 255, 0.7);
-        }
-
-        .difficulty-label {
-            font-size: 0.9em;
-            color: #6c757d;
-            margin-bottom: 15px;
-        }
-
-        .game-card:hover .difficulty-label {
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .coming-soon-card {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border: 2px dashed #ced4da;
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            color: #6c757d;
-            position: relative;
-        }
-
-        .coming-soon-card .game-icon {
-            opacity: 0.5;
-        }
-
-        .coming-soon-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: #ffc107;
-            color: #212529;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 0.8em;
-            font-weight: bold;
-        }
-
-        .footer {
-            margin-top: 40px;
-            color: #6c757d;
-            font-size: 0.9em;
-        }
-
-        .footer a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .footer a:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 30px 20px;
-            }
-            
-            h1 {
-                font-size: 2.5em;
-            }
-            
-            .games-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            
-            .game-card {
-                padding: 25px 20px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="./css/styles.css">
 </head>
-<body>
+<body class="theme-purple page-home">
     <div class="container">
         <h1>🎮 English Games</h1>
         <p class="subtitle">Interactive Language Learning Hub</p>
@@ -211,7 +18,7 @@
 
         <div class="games-grid">
             <!-- Cardinal Numbers Game -->
-            <div class="game-card cardinal" onclick="playGame('cardinal')">
+            <div class="game-card" onclick="playGame('cardinal')">
                 <span class="game-icon">🔢</span>
                 <h3 class="game-title">Cardinal Numbers</h3>
                 <p class="game-description">
@@ -228,7 +35,7 @@
             </div>
 
             <!-- Ordinal Numbers Game -->
-            <div class="game-card ordinal" onclick="playGame('ordinal')">
+            <div class="game-card" onclick="playGame('ordinal')">
                 <span class="game-icon">🏆</span>
                 <h3 class="game-title">Ordinal Numbers</h3>
                 <p class="game-description">
@@ -245,10 +52,7 @@
             </div>
 
             <!-- Days, Months & Seasons Game -->
-            <div class="game-card" style="background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);" 
-                 onmouseover="this.style.background='linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'; this.style.color='white';"
-                 onmouseout="this.style.background='linear-gradient(135deg, #f8f9fa 0%, #fff 100%)'; this.style.color='';"
-                 onclick="playGame('days-months-seasons')">
+            <div class="game-card" onclick="playGame('days-months-seasons')">
                 <span class="game-icon">📅</span>
                 <h3 class="game-title">Days, Months & Seasons</h3>
                 <p class="game-description">

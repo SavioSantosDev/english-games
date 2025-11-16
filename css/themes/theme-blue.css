@@ -1,0 +1,25 @@
+/* ============================================
+   THEME: BLUE
+   Cyan/blue gradient theme
+   ============================================ */
+
+.theme-blue {
+    --primary-color: #4facfe;
+    --primary-dark: #00f2fe;
+    --primary-light: #e8f7ff;
+    --primary-shadow: rgba(79, 172, 254, 0.3);
+    --primary-shadow-hover: rgba(79, 172, 254, 0.4);
+}
+
+.theme-blue {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.theme-blue h1 {
+    color: #667eea;
+}
+
+.theme-blue .instruction {
+    background: #e7f3ff;
+    color: #004085;
+}

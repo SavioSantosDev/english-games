@@ -1,0 +1,151 @@
+/* ============================================
+   CARDS
+   Game cards and selection cards
+   ============================================ */
+
+/* Games Grid */
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin: 40px 0;
+}
+
+/* Game Card */
+.game-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+    border: 2px solid #e9ecef;
+    border-radius: 20px;
+    padding: 30px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.game-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    border-color: transparent;
+}
+
+.game-icon {
+    font-size: 4em;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.game-title {
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.game-description {
+    font-size: 1em;
+    opacity: 0.8;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.game-levels {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.level-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #dee2e6;
+    transition: background 0.3s ease;
+}
+
+.game-card:hover .level-indicator {
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.difficulty-label {
+    font-size: 0.9em;
+    color: #6c757d;
+    margin-bottom: 15px;
+}
+
+.game-card:hover .difficulty-label {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Coming Soon Cards */
+.coming-soon-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 2px dashed #ced4da;
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    color: #6c757d;
+    position: relative;
+}
+
+.coming-soon-card .game-icon {
+    opacity: 0.5;
+}
+
+.coming-soon-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #ffc107;
+    color: #212529;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+/* Selection Cards (Range/Difficulty Selector) */
+.selector-grid {
+    margin: 30px 0;
+}
+
+.selector-option {
+    background: #f5f5f5;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 15px 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.selector-option:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px var(--primary-shadow, rgba(102, 126, 234, 0.3));
+    background: var(--primary-color, #667eea);
+    border-color: var(--primary-color, #667eea);
+    color: white;
+}
+
+.selector-option h3 {
+    font-size: 1.3em;
+    margin-bottom: 5px;
+}
+
+.selector-option p {
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+/* Responsive Cards */
+@media (max-width: 600px) {
+    .games-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .game-card {
+        padding: 25px 20px;
+    }
+}
