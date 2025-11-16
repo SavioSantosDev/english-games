@@ -1,0 +1,267 @@
+{
+  "theme": {
+    "name": "Days, Months & Seasons",
+    "icon": "📅"
+  },
+  "variables": {
+    "month": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+    "day": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+    "season": ["Spring", "Summer", "Autumn", "Winter"],
+    "name": ["Alexander", "Charlotte", "Benjamin", "Victoria", "Theodore", "Elizabeth", "Nathaniel", "Isabella", "Sebastian", "Margaret"],
+    "date": ["first", "third", "fifth", "tenth", "fifteenth", "twentieth", "twenty-fifth", "thirtieth"],
+    "year": ["2019", "2020", "2021", "2022", "2023", "2024", "2025"],
+    "time": ["early morning", "late afternoon", "evening", "midnight"],
+    "number": ["several", "numerous", "multiple", "countless"],
+    "event": ["conference", "symposium", "workshop", "seminar", "exhibition", "ceremony"],
+    "activity": ["quarterly review", "annual meeting", "project deadline", "performance evaluation"],
+    "duration": ["fortnight", "quarter", "semester", "fiscal year"]
+  },
+  "sentences": [
+    {
+      "sentence": "The international {event} that was originally scheduled for {day} has been postponed until the following {month} due to unforeseen circumstances",
+      "question": "In which month will the {event} be held?",
+      "answer": "{month}",
+      "category": "months"
+    },
+    {
+      "sentence": "Throughout the entire {season} season, particularly during {month} and the subsequent weeks, the research team conducted field studies in various locations",
+      "question": "Which season did the research take place?",
+      "answer": "{season}",
+      "category": "seasons"
+    },
+    {
+      "sentence": "Had {name} realized that the submission deadline was {day} instead of the anticipated date, they would have prioritized the project differently",
+      "question": "What day was the actual deadline?",
+      "answer": "{day}",
+      "category": "days"
+    },
+    {
+      "sentence": "The company's {activity} is traditionally held on the second {day} of {month}, unless it coincides with a public holiday",
+      "question": "In which month is the {activity} typically held?",
+      "answer": "{month}",
+      "category": "months"
+    },
+    {
+      "sentence": "Despite the fact that {season} typically brings mild weather, last year's {month} was exceptionally cold and required additional heating preparations",
+      "question": "Which season was unusually cold?",
+      "answer": "{season}",
+      "category": "seasons"
+    },
+    {
+      "sentence": "By the time the construction project reaches completion in {month} {year}, it will have taken approximately three years from its initial conception",
+      "question": "When will the construction be completed?",
+      "answer": "{month}",
+      "category": "months"
+    },
+    {
+      "sentence": "Every {day} morning without exception, {name} participates in virtual meetings with colleagues across different time zones",
+      "question": "Which day does {name} have virtual meetings?",
+      "answer": "{day}",
+      "category": "days"
+    },
+    {
+      "sentence": "The transition from {season} to the subsequent season brings significant changes in temperature and daylight hours throughout the northern hemisphere",
+      "question": "Which season is mentioned as transitioning?",
+      "answer": "{season}",
+      "category": "seasons"
+    },
+    {
+      "sentence": "Assuming that the logistics can be arranged by {day}, the shipment should arrive before the end of {month} as previously estimated",
+      "question": "By which day should logistics be arranged?",
+      "answer": "{day}",
+      "category": "days"
+    },
+    {
+      "sentence": "The historical records indicate that the agreement was signed on a {day} in {month} {year}, marking a significant milestone in diplomatic relations",
+      "question": "In which month was the agreement signed?",
+      "answer": "{month}",
+      "category": "months"
+    },
+    {
+      "sentence": "While most employees prefer taking vacation during {season}, {name} consistently chooses the less crowded {season:Autumn} period for personal travel",
+      "question": "When does {name} prefer to take vacation?",
+      "answer": "Autumn",
+      "category": "seasons"
+    },
+    {
+      "sentence": "The board of directors convenes every third {day} of the month to discuss strategic initiatives and review quarterly performance metrics",
+      "question": "On which day does the board meet?",
+      "answer": "{day}",
+      "category": "days"
+    },
+    {
+      "sentence": "Between {month} and the following month, the organization will undergo a comprehensive restructuring process affecting multiple departments",
+      "question": "When does the restructuring begin?",
+      "answer": "{month}",
+      "category": "months"
+    },
+    {
+      "sentence": "During the {season} months when agricultural activity intensifies, farmers typically work extended hours from dawn until late evening",
+      "question": "Which season sees intensified agricultural activity?",
+      "answer": "{season}",
+      "category": "seasons"
+    },
+    {
+      "sentence": "If the regulatory approval is obtained by {day} as anticipated, the product launch can proceed in {month} according to the original timeline",
+      "question": "By which day is approval needed?",
+      "answer": "{day}",
+      "category": "days"
+    },
+    {
+      "sentence": "The academic calendar, which runs from {month:September} through the end of the following {month:June}, includes numerous holidays and examination periods",
+      "question": "When does the academic calendar start?",
+      "answer": "September",
+      "category": "months"
+    },
+    {
+      "sentence": "Throughout {season}, when the weather conditions are optimal, the coastal region attracts thousands of tourists seeking recreational activities",
+      "question": "Which season attracts the most tourists?",
+      "answer": "{season}",
+      "category": "seasons"
+    },
+    {
+      "sentence": "Since the facility operates continuously except on {day:Sunday} when maintenance is performed, production schedules must account for this weekly interruption",
+      "question": "On which day is maintenance performed?",
+      "answer": "Sunday",
+      "category": "days"
+    },
+    {
+      "sentence": "The fiscal year concluding in {month:March} showed remarkable growth compared to the previous year's performance across all measured indicators",
+      "question": "When does the fiscal year end?",
+      "answer": "March",
+      "category": "months"
+    },
+    {
+      "sentence": "Although {name} initially planned to relocate during {season}, unexpected professional commitments necessitated postponing the move to the following season",
+      "question": "When did {name} originally plan to relocate?",
+      "answer": "{season}",
+      "category": "seasons"
+    },
+    {
+      "sentence": "The training program that commences every {day:Monday} and continues for six consecutive weeks is mandatory for all newly hired personnel",
+      "question": "On which day does training start each week?",
+      "answer": "Monday",
+      "category": "days"
+    },
+    {
+      "sentence": "Environmental scientists have observed that the migration patterns typically begin in {month} and extend through the subsequent two months",
+      "question": "When do migration patterns begin?",
+      "answer": "{month}",
+      "category": "months"
+    },
+    {
+      "sentence": "The transition into {season} brings not only temperature changes but also significant shifts in consumer behavior and market dynamics",
+      "question": "Which season brings market dynamic shifts?",
+      "answer": "{season}",
+      "category": "seasons"
+    },
+    {
+      "sentence": "Unless circumstances change dramatically, the negotiation sessions will continue every {day} until a mutually acceptable agreement is reached",
+      "question": "On which day do negotiations occur?",
+      "answer": "{day}",
+      "category": "days"
+    },
+    {
+      "sentence": "The commemorative celebration scheduled for {month} will mark the twenty-fifth anniversary of the organization's founding with elaborate ceremonies",
+      "question": "When is the anniversary celebration?",
+      "answer": "{month}",
+      "category": "months"
+    },
+    {
+      "sentence": "Climate data from recent decades suggests that {season} temperatures have been steadily increasing, raising concerns among environmental researchers",
+      "question": "Which season shows temperature increases?",
+      "answer": "{season}",
+      "category": "seasons"
+    },
+    {
+      "sentence": "The comprehensive audit that begins on {day} will examine financial records from the entire previous fiscal year in meticulous detail",
+      "question": "When does the audit begin?",
+      "answer": "{day}",
+      "category": "days"
+    },
+    {
+      "sentence": "By {month} of next year, the infrastructure improvements will have been completed, transforming the entire downtown district significantly",
+      "question": "When will improvements be completed?",
+      "answer": "{month}",
+      "category": "months"
+    },
+    {
+      "sentence": "Historically, {season:Summer} has been characterized by increased economic activity, though recent trends suggest this pattern may be changing",
+      "question": "Which season traditionally sees economic increases?",
+      "answer": "Summer",
+      "category": "seasons"
+    },
+    {
+      "sentence": "The policy stipulates that all requests submitted after {day:Friday} will be processed during the following week rather than immediately",
+      "question": "After which day are requests processed next week?",
+      "answer": "Friday",
+      "category": "days"
+    },
+    {
+      "sentence": "Preliminary forecasts indicate that the product launch in {month} could potentially exceed initial sales projections by a significant margin",
+      "question": "When is the product launch scheduled?",
+      "answer": "{month}",
+      "category": "months"
+    },
+    {
+      "sentence": "During {season:Winter}, when daylight hours are at their shortest, the organization implements flexible working arrangements to accommodate employee preferences",
+      "question": "Which season has the shortest daylight?",
+      "answer": "Winter",
+      "category": "seasons"
+    },
+    {
+      "sentence": "Should the inspection reveal any deficiencies on {day}, corrective measures must be implemented before operations can resume normally",
+      "question": "When is the inspection scheduled?",
+      "answer": "{day}",
+      "category": "days"
+    },
+    {
+      "sentence": "The ambitious expansion project targeting completion by {month} represents the largest capital investment in the company's history",
+      "question": "When should the expansion be completed?",
+      "answer": "{month}",
+      "category": "months"
+    },
+    {
+      "sentence": "Throughout {season:Spring}, the institution offers specialized programs designed specifically for professional development and continuing education",
+      "question": "When are specialized programs offered?",
+      "answer": "Spring",
+      "category": "seasons"
+    },
+    {
+      "sentence": "Given that {name} has been coordinating the initiative since {month} {year}, their expertise in this domain is extensively recognized",
+      "question": "Since which month has {name} been coordinating?",
+      "answer": "{month}",
+      "category": "months"
+    },
+    {
+      "sentence": "The quarterly performance review scheduled for {day} will assess progress against established objectives and identify areas requiring improvement",
+      "question": "When is the performance review?",
+      "answer": "{day}",
+      "category": "days"
+    },
+    {
+      "sentence": "Although {season} traditionally marks the beginning of the busy period, preparations actually commence during the preceding season",
+      "question": "Which season marks the busy period?",
+      "answer": "{season}",
+      "category": "seasons"
+    },
+    {
+      "sentence": "The certification program that runs from {month} through the subsequent three months requires substantial dedication and study commitment",
+      "question": "When does the certification program start?",
+      "answer": "{month}",
+      "category": "months"
+    },
+    {
+      "sentence": "Considering that deliveries occur exclusively on {day} mornings, inventory management must account for this predictable weekly schedule",
+      "question": "When do deliveries occur?",
+      "answer": "{day}",
+      "category": "days"
+    },
+    {
+      "sentence": "Market analysis suggests that consumer spending during {season} follows distinctive patterns that differ markedly from other seasons",
+      "question": "Which season shows distinctive spending patterns?",
+      "answer": "{season}",
+      "category": "seasons"
+    }
+  ]
+}

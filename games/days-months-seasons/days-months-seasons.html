@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Days, Months & Seasons - English Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .difficulty-buttons {
+            display: grid;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 20px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-easy {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            color: #fff;
+        }
+
+        .btn-medium {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            color: #fff;
+        }
+
+        .btn-hard {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: #fff;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.1em;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+            padding: 12px 25px;
+            font-size: 1em;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .progress {
+            font-size: 1.2em;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .score-display {
+            display: flex;
+            gap: 15px;
+        }
+
+        .score-item {
+            text-align: center;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .score-correct {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .score-incorrect {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .exercise-container {
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .audio-control {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            color: white;
+        }
+
+        .play-button {
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            font-size: 2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+        }
+
+        .play-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .play-button:active {
+            transform: scale(0.95);
+        }
+
+        .options-container {
+            display: grid;
+            gap: 12px;
+        }
+
+        .option-button {
+            padding: 18px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .option-button:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            transform: translateX(5px);
+        }
+
+        .option-button.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .option-button.correct {
+            border-color: #28a745;
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .option-button.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .option-button:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .option-label {
+            font-weight: 700;
+            min-width: 30px;
+        }
+
+        .mic-container {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .mic-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            font-size: 2.5em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            position: relative;
+        }
+
+        .mic-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .mic-button.recording {
+            animation: pulse 1.5s infinite;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .mic-status {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #666;
+            min-height: 30px;
+        }
+
+        .mic-status.recording {
+            color: #dc3545;
+            font-weight: 600;
+        }
+
+        .transcript-display {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            min-height: 60px;
+            font-size: 1.1em;
+            color: #333;
+        }
+
+        .feedback {
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-weight: 600;
+            text-align: center;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feedback.success {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #28a745;
+        }
+
+        .feedback.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #dc3545;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        .results-container {
+            text-align: center;
+        }
+
+        .final-score {
+            font-size: 3em;
+            color: #667eea;
+            margin: 30px 0;
+            font-weight: 700;
+        }
+
+        .performance-message {
+            font-size: 1.3em;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .performance-excellent {
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        .performance-good {
+            color: #ffc107;
+            font-weight: 600;
+        }
+
+        .performance-needspractice {
+            color: #dc3545;
+            font-weight: 600;
+        }
+
+        .back-home {
+            display: inline-block;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-size: 1.1em;
+        }
+
+        .back-home:hover {
+            text-decoration: underline;
+        }
+
+        .instruction-text {
+            text-align: center;
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .difficulty-info {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .difficulty-info h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .difficulty-info p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .btn {
+                padding: 15px;
+                font-size: 1em;
+            }
+
+            .score-display {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            color: #667eea;
+            font-size: 1.2em;
+            padding: 40px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #667eea;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Audio Controls */
+        .audio-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .speed-button {
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .speed-button:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.05);
+        }
+
+        .speed-button.active {
+            background: white;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .back-button {
+            background: #e0e0e0;
+            color: #333;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-button:hover {
+            background: #d0d0d0;
+            transform: translateX(-3px);
+        }
+
+        .transcript-toggle {
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .transcript-toggle:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.05);
+        }
+
+        .transcript-box {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            border-left: 4px solid white;
+            color: #333;
+            font-size: 1.1em;
+            line-height: 1.6;
+            animation: slideDown 0.3s ease;
+        }
+
+        .transcript-box.visible {
+            display: block;
+        }
+
+        .transcript-label {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Start Screen -->
+        <div id="startScreen" class="screen active">
+            <h1>📅 Days, Months & Seasons</h1>
+            <p class="subtitle">Practice English with advanced contextual sentences</p>
+            
+            <div class="difficulty-info">
+                <h3>About This Game</h3>
+                <p>Listen to complex sentences about days, months, and seasons. Practice both listening comprehension and speaking with advanced vocabulary and grammar structures!</p>
+            </div>
+
+            <!-- Settings Panel -->
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin: 25px 0; border: 2px solid #e9ecef;">
+                <h3 style="color: #667eea; margin-bottom: 15px; font-size: 1.2em;">⚙️ Settings</h3>
+                
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0;">
+                    <label style="font-size: 1.1em; color: #333; cursor: pointer;" for="autoAdvanceToggle">
+                        Auto-advance after correct answer
+                    </label>
+                    <label class="switch">
+                        <input type="checkbox" id="autoAdvanceToggle" checked onchange="toggleAutoAdvance()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <p style="font-size: 0.9em; color: #666; margin-top: 5px;">
+                    When enabled, the game automatically moves to the next question after you answer correctly.
+                </p>
+            </div>
+
+            <button class="btn btn-primary" onclick="startGame()" style="width: 100%; padding: 25px; font-size: 1.3em; margin-top: 20px;">
+                🎮 Start Game
+            </button>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="../../index.html" class="back-home">← Back to Menu</a>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="gameScreen" class="screen">
+            <div class="game-header">
+                <div class="progress">
+                    Question <span id="currentQuestion">1</span>/<span id="totalQuestions">10</span>
+                </div>
+                <div class="score-display">
+                    <div class="score-item score-correct">
+                        ✓ <span id="correctCount">0</span>
+                    </div>
+                    <div class="score-item score-incorrect">
+                        ✗ <span id="incorrectCount">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="exerciseContainer" class="exercise-container">
+                <!-- Exercise content will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="resultsScreen" class="screen">
+            <div class="results-container">
+                <h1>🎉 Game Complete!</h1>
+                
+                <div class="final-score">
+                    <span id="finalCorrect">0</span> / <span id="finalTotal">10</span>
+                </div>
+
+                <div class="performance-message">
+                    <span id="performanceText"></span>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="restartGame()">Play Again</button>
+                    <button class="btn btn-secondary" onclick="showScreen('startScreen')">Back to Start</button>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="../../index.html" class="back-home">← Back to Menu</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // REUSABLE SENTENCE DATABASE STRUCTURE
+        // This structure can be easily adapted for other games
+        // Database loaded from external JSON file
+        // ============================================
+        
+        let sentenceDatabase = null;
+        let databaseLoaded = false;
+
+        // ============================================
+        // DATABASE LOADING
+        // ============================================
+        async function loadDatabase() {
+            try {
+                const response = await fetch('./database.json');
+                if (!response.ok) {
+                    throw new Error('Failed to load database');
+                }
+                sentenceDatabase = await response.json();
+                databaseLoaded = true;
+                console.log('Database loaded successfully');
+            } catch (error) {
+                console.error('Error loading database:', error);
+                alert('Error loading game data. Please refresh the page.');
+            }
+        }
+
+        // ============================================
+        // GAME STATE
+        // ============================================
+        let gameState = {
+            currentQuestionIndex: 0,
+            totalQuestions: 10,
+            correctCount: 0,
+            incorrectCount: 0,
+            exercises: [],
+            currentExercise: null,
+            recognition: null,
+            isListening: false,
+            autoAdvance: true,
+            audioSpeed: 1.0 // 1.0 = normal, 0.7 = slow
+        };
+
+        // ============================================
+        // CORE GAME ENGINE - REUSABLE
+        // ============================================
+
+        async function startGame() {
+            if (!databaseLoaded) {
+                await loadDatabase();
+            }
+            
+            gameState.currentQuestionIndex = 0;
+            gameState.correctCount = 0;
+            gameState.incorrectCount = 0;
+            gameState.exercises = generateExercises(10);
+            
+            showScreen('gameScreen');
+            loadNextExercise();
+        }
+
+        function toggleAutoAdvance() {
+            gameState.autoAdvance = document.getElementById('autoAdvanceToggle').checked;
+        }
+
+        function setAudioSpeed(speed) {
+            gameState.audioSpeed = speed;
+            
+            // Update button states
+            document.querySelectorAll('.speed-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function generateExercises(count) {
+            const exercises = [];
+            const templates = sentenceDatabase.sentences;
+            
+            for (let i = 0; i < count; i++) {
+                // Randomly choose exercise type (50/50 split)
+                const type = Math.random() < 0.5 ? 'listenChoose' : 'listenRepeat';
+                
+                // Randomly select a template
+                const template = templates[Math.floor(Math.random() * templates.length)];
+                
+                // Generate sentence with variables filled
+                const exerciseData = fillVariables(template);
+                
+                exercises.push({
+                    type: type,
+                    ...exerciseData
+                });
+            }
+            
+            return exercises;
+        }
+
+        function fillVariables(template) {
+            let sentence = template.sentence;
+            let answer = template.answer;
+            const usedValues = {};
+
+            // Find all variables in the sentence
+            const variablePattern = /\{([^}:]+)(?::([^}]+))?\}/g;
+            let match;
+            
+            while ((match = variablePattern.exec(template.sentence)) !== null) {
+                const [fullMatch, varName, fixedValue] = match;
+                
+                // Use fixed value if provided, otherwise random
+                let value;
+                if (fixedValue) {
+                    value = fixedValue;
+                } else if (usedValues[varName]) {
+                    value = usedValues[varName];
+                } else {
+                    const pool = sentenceDatabase.variables[varName];
+                    value = pool[Math.floor(Math.random() * pool.length)];
+                    usedValues[varName] = value;
+                }
+                
+                sentence = sentence.replace(fullMatch, value);
+            }
+
+            // Fill variables in answer
+            variablePattern.lastIndex = 0;
+            while ((match = variablePattern.exec(template.answer)) !== null) {
+                const [fullMatch, varName, fixedValue] = match;
+                const value = fixedValue || usedValues[varName];
+                answer = answer.replace(fullMatch, value);
+            }
+
+            // Fill variables in question
+            let question = template.question;
+            variablePattern.lastIndex = 0;
+            while ((match = variablePattern.exec(template.question)) !== null) {
+                const [fullMatch, varName, fixedValue] = match;
+                const value = fixedValue || usedValues[varName];
+                question = question.replace(fullMatch, value);
+            }
+
+            // Generate wrong answers based on category
+            const wrongAnswers = generateWrongAnswers(answer, template.category);
+
+            return {
+                sentence: sentence,
+                question: question,
+                correctAnswer: answer,
+                wrongAnswers: wrongAnswers,
+                category: template.category
+            };
+        }
+
+        function generateWrongAnswers(correctAnswer, category) {
+            let pool;
+            
+            if (category === 'days') {
+                pool = sentenceDatabase.variables.day;
+            } else if (category === 'months') {
+                pool = sentenceDatabase.variables.month;
+            } else if (category === 'seasons') {
+                pool = sentenceDatabase.variables.season;
+            }
+
+            // Get 3 random wrong answers
+            const wrong = pool.filter(item => item !== correctAnswer);
+            const shuffled = wrong.sort(() => Math.random() - 0.5);
+            return shuffled.slice(0, 3);
+        }
+
+        function loadNextExercise() {
+            if (gameState.currentQuestionIndex >= gameState.totalQuestions) {
+                showResults();
+                return;
+            }
+
+            gameState.currentExercise = gameState.exercises[gameState.currentQuestionIndex];
+            
+            // Update progress
+            document.getElementById('currentQuestion').textContent = gameState.currentQuestionIndex + 1;
+            document.getElementById('totalQuestions').textContent = gameState.totalQuestions;
+            
+            // Render exercise based on type
+            if (gameState.currentExercise.type === 'listenChoose') {
+                renderListenChooseExercise();
+            } else {
+                renderListenRepeatExercise();
+            }
+            
+            // Populate transcript after rendering
+            setTimeout(() => {
+                const transcriptElement = document.getElementById('transcriptText');
+                if (transcriptElement) {
+                    transcriptElement.textContent = gameState.currentExercise.sentence;
+                }
+            }, 100);
+        }
+
+        function toggleTranscript() {
+            const transcriptBox = document.getElementById('transcriptBox');
+            const toggleButton = event.target;
+            
+            if (transcriptBox.classList.contains('visible')) {
+                transcriptBox.classList.remove('visible');
+                toggleButton.innerHTML = '👁️ Show Transcript';
+            } else {
+                transcriptBox.classList.add('visible');
+                toggleButton.innerHTML = '🙈 Hide Transcript';
+            }
+        }
+
+        // ============================================
+        // LISTEN & CHOOSE EXERCISE
+        // ============================================
+
+        function renderListenChooseExercise() {
+            const container = document.getElementById('exerciseContainer');
+            
+            // Create options array and shuffle
+            const allOptions = [
+                gameState.currentExercise.correctAnswer,
+                ...gameState.currentExercise.wrongAnswers
+            ];
+            const shuffledOptions = allOptions.sort(() => Math.random() - 0.5);
+
+            container.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <button class="back-button" onclick="confirmBackToStart()">← Back</button>
+                    <div class="instruction-text" style="margin: 0; flex: 1; text-align: center;">
+                        🎧 Listen to the sentence
+                    </div>
+                    <div style="width: 100px;"></div>
+                </div>
+                
+                <div class="audio-control">
+                    <div style="font-size: 1.2em; margin-bottom: 10px;">Click to listen</div>
+                    <button class="play-button" onclick="playAudio()">▶️</button>
+                    <div class="audio-controls">
+                        <button class="speed-button active" onclick="setAudioSpeed(1.0); playAudio(1.0);">Normal</button>
+                        <button class="speed-button" onclick="setAudioSpeed(0.7); playAudio(0.7);">Slow</button>
+                    </div>
+                    <button class="transcript-toggle" onclick="toggleTranscript()">👁️ Show Transcript</button>
+                    <div class="transcript-box" id="transcriptBox">
+                        <div class="transcript-label">What was said:</div>
+                        <div id="transcriptText"></div>
+                    </div>
+                    <div style="font-size: 0.9em; opacity: 0.9; margin-top: 10px;">Choose speed and replay as many times as you need</div>
+                </div>
+
+                <div style="text-align: center; margin: 20px 0; padding: 20px; background: #f8f9fa; border-radius: 12px; border-left: 4px solid #667eea;">
+                    <div style="font-size: 1.3em; font-weight: 600; color: #333;">
+                        ${gameState.currentExercise.question}
+                    </div>
+                </div>
+
+                <div class="options-container">
+                    ${shuffledOptions.map((option, index) => `
+                        <button class="option-button" onclick="selectOption('${option}', this)">
+                            <span class="option-label">${String.fromCharCode(65 + index)})</span>
+                            <span>${option}</span>
+                        </button>
+                    `).join('')}
+                </div>
+
+                <div id="feedback"></div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkAnswer()" id="checkButton" disabled>
+                        Check Answer
+                    </button>
+                </div>
+            `;
+
+            // Auto-play audio on load
+            setTimeout(() => playAudio(), 500);
+        }
+
+        let selectedAnswer = null;
+
+        function playAudio(speed = null) {
+            const utterance = new SpeechSynthesisUtterance(gameState.currentExercise.sentence);
+            utterance.lang = 'en-US';
+            utterance.rate = speed || gameState.audioSpeed;
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function selectOption(answer, button) {
+            // Deselect all options
+            document.querySelectorAll('.option-button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // Select clicked option
+            button.classList.add('selected');
+            selectedAnswer = answer;
+            
+            // Enable check button
+            document.getElementById('checkButton').disabled = false;
+        }
+
+        function checkAnswer() {
+            const isCorrect = selectedAnswer === gameState.currentExercise.correctAnswer;
+            const feedback = document.getElementById('feedback');
+            const checkButton = document.getElementById('checkButton');
+            
+            // Disable all option buttons
+            document.querySelectorAll('.option-button').forEach(btn => {
+                btn.disabled = true;
+                
+                // Highlight correct answer
+                if (btn.textContent.includes(gameState.currentExercise.correctAnswer)) {
+                    btn.classList.add('correct');
+                }
+                
+                // Highlight incorrect selection
+                if (!isCorrect && btn.textContent.includes(selectedAnswer)) {
+                    btn.classList.add('incorrect');
+                }
+            });
+
+            if (isCorrect) {
+                gameState.correctCount++;
+                feedback.innerHTML = '<div class="feedback success">✓ Correct! Well done!</div>';
+                updateScore();
+                
+                // Auto-advance if enabled
+                if (gameState.autoAdvance) {
+                    setTimeout(() => {
+                        nextQuestion();
+                    }, 1500);
+                } else {
+                    checkButton.textContent = 'Next Question →';
+                    checkButton.onclick = nextQuestion;
+                }
+            } else {
+                gameState.incorrectCount++;
+                feedback.innerHTML = `<div class="feedback error">✗ Incorrect. The correct answer is: <strong>${gameState.currentExercise.correctAnswer}</strong></div>`;
+                updateScore();
+                
+                // Change button to "Next"
+                checkButton.textContent = 'Next Question →';
+                checkButton.onclick = nextQuestion;
+            }
+        }
+
+        // ============================================
+        // LISTEN & REPEAT EXERCISE
+        // ============================================
+
+        function renderListenRepeatExercise() {
+            const container = document.getElementById('exerciseContainer');
+            
+            container.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <button class="back-button" onclick="confirmBackToStart()">← Back</button>
+                    <div class="instruction-text" style="margin: 0; flex: 1; text-align: center;">
+                        🎧 Listen and repeat
+                    </div>
+                    <div style="width: 100px;"></div>
+                </div>
+                
+                <div class="audio-control">
+                    <div style="font-size: 1.2em; margin-bottom: 10px;">Click to listen</div>
+                    <button class="play-button" onclick="playAudio()">▶️</button>
+                    <div class="audio-controls">
+                        <button class="speed-button active" onclick="setAudioSpeed(1.0); playAudio(1.0);">Normal</button>
+                        <button class="speed-button" onclick="setAudioSpeed(0.7); playAudio(0.7);">Slow</button>
+                    </div>
+                    <button class="transcript-toggle" onclick="toggleTranscript()">👁️ Show Transcript</button>
+                    <div class="transcript-box" id="transcriptBox">
+                        <div class="transcript-label">What was said:</div>
+                        <div id="transcriptText"></div>
+                    </div>
+                </div>
+
+                <div class="mic-container">
+                    <div style="font-size: 1.1em; margin-bottom: 15px; color: #666;">
+                        Then click the microphone and repeat
+                    </div>
+                    <button class="mic-button" id="micButton" onclick="toggleRecording()">
+                        🎤
+                    </button>
+                    <div class="mic-status" id="micStatus">Click to start recording</div>
+                    <div class="transcript-display" id="transcript"></div>
+                </div>
+
+                <div id="feedback"></div>
+
+                <div class="button-group" id="nextButtonContainer" style="display: none;">
+                    <button class="btn btn-primary" onclick="nextQuestion()">
+                        Next Question →
+                    </button>
+                </div>
+            `;
+
+            // Auto-play audio on load
+            setTimeout(() => playAudio(), 500);
+
+            // Initialize speech recognition
+            initializeSpeechRecognition();
+        }
+
+        function initializeSpeechRecognition() {
+            if (!('webkitSpeechRecognition' in window)) {
+                document.getElementById('micStatus').innerHTML = 
+                    '<span style="color: #dc3545;">Speech recognition not supported in this browser</span>';
+                return;
+            }
+
+            gameState.recognition = new webkitSpeechRecognition();
+            gameState.recognition.continuous = false;
+            gameState.recognition.interimResults = false;
+            gameState.recognition.lang = 'en-US';
+
+            gameState.recognition.onstart = function() {
+                gameState.isListening = true;
+                document.getElementById('micButton').classList.add('recording');
+                document.getElementById('micStatus').innerHTML = 
+                    '<span class="recording">🔴 Recording... Speak now</span>';
+            };
+
+            gameState.recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById('transcript').textContent = `You said: "${transcript}"`;
+                validateSpeech(transcript);
+            };
+
+            gameState.recognition.onerror = function(event) {
+                console.error('Speech recognition error:', event.error);
+                document.getElementById('micStatus').innerHTML = 
+                    '<span style="color: #dc3545;">Error: ' + event.error + '</span>';
+                stopRecording();
+            };
+
+            gameState.recognition.onend = function() {
+                stopRecording();
+            };
+        }
+
+        function toggleRecording() {
+            if (gameState.isListening) {
+                gameState.recognition.stop();
+            } else {
+                gameState.recognition.start();
+            }
+        }
+
+        function stopRecording() {
+            gameState.isListening = false;
+            const micButton = document.getElementById('micButton');
+            if (micButton) {
+                micButton.classList.remove('recording');
+            }
+            const micStatus = document.getElementById('micStatus');
+            if (micStatus && !micStatus.innerHTML.includes('Correct') && !micStatus.innerHTML.includes('try again')) {
+                micStatus.textContent = 'Click to record again';
+            }
+        }
+
+        function validateSpeech(transcript) {
+            const expected = normalizeText(gameState.currentExercise.sentence);
+            const spoken = normalizeText(transcript);
+            
+            // Calculate similarity (simple approach - can be enhanced)
+            const isCorrect = calculateSimilarity(expected, spoken) > 0.7;
+
+            const feedback = document.getElementById('feedback');
+            const micStatus = document.getElementById('micStatus');
+
+            if (isCorrect) {
+                gameState.correctCount++;
+                feedback.innerHTML = '<div class="feedback success">✓ Excellent! You said it correctly!</div>';
+                micStatus.innerHTML = '<span style="color: #28a745; font-weight: 600;">✓ Correct!</span>';
+                document.getElementById('micButton').disabled = true;
+                
+                updateScore();
+                
+                // Auto-advance if enabled
+                if (gameState.autoAdvance) {
+                    setTimeout(() => {
+                        nextQuestion();
+                    }, 1500);
+                } else {
+                    document.getElementById('nextButtonContainer').style.display = 'flex';
+                }
+            } else {
+                gameState.incorrectCount++;
+                feedback.innerHTML = `
+                    <div class="feedback error">
+                        Not quite right. Try again!<br>
+                        <small>Expected: "${gameState.currentExercise.sentence}"</small>
+                    </div>
+                `;
+                micStatus.innerHTML = '<span style="color: #dc3545;">Try again - click to record</span>';
+                
+                updateScore();
+            }
+        }
+
+        function normalizeText(text) {
+            return text.toLowerCase()
+                .replace(/[.,!?;:]/g, '')
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+        function calculateSimilarity(str1, str2) {
+            const words1 = str1.split(' ');
+            const words2 = str2.split(' ');
+            
+            let matches = 0;
+            const maxLength = Math.max(words1.length, words2.length);
+            
+            words1.forEach(word => {
+                if (words2.includes(word)) {
+                    matches++;
+                }
+            });
+            
+            return matches / maxLength;
+        }
+
+        // ============================================
+        // GAME FLOW
+        // ============================================
+
+        function nextQuestion() {
+            gameState.currentQuestionIndex++;
+            selectedAnswer = null;
+            loadNextExercise();
+        }
+
+        function updateScore() {
+            document.getElementById('correctCount').textContent = gameState.correctCount;
+            document.getElementById('incorrectCount').textContent = gameState.incorrectCount;
+        }
+
+        function showResults() {
+            document.getElementById('finalCorrect').textContent = gameState.correctCount;
+            document.getElementById('finalTotal').textContent = gameState.totalQuestions;
+            
+            const percentage = (gameState.correctCount / gameState.totalQuestions) * 100;
+            const performanceText = document.getElementById('performanceText');
+            
+            if (percentage >= 80) {
+                performanceText.innerHTML = '<span class="performance-excellent">🌟 Excellent! Outstanding performance!</span>';
+            } else if (percentage >= 60) {
+                performanceText.innerHTML = '<span class="performance-good">👍 Good job! Keep practicing!</span>';
+            } else {
+                performanceText.innerHTML = '<span class="performance-needspractice">💪 Keep practicing! You\'ll get better!</span>';
+            }
+            
+            showScreen('resultsScreen');
+        }
+
+        function restartGame() {
+            startGame();
+        }
+
+        function confirmBackToStart() {
+            if (confirm('Are you sure you want to go back? Your current progress will be lost.')) {
+                showScreen('startScreen');
+            }
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+
+        // Load database on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadDatabase();
+        });
+
+        // Clean up speech synthesis on page unload
+        window.addEventListener('beforeunload', () => {
+            window.speechSynthesis.cancel();
+            if (gameState.recognition) {
+                gameState.recognition.stop();
+            }
+        });
+    </script>
+</body>
+</html>

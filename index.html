@@ -244,6 +244,25 @@
                 <small>Ordinals from 1st to 1000th</small>
             </div>
 
+            <!-- Days, Months & Seasons Game -->
+            <div class="game-card" style="background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);" 
+                 onmouseover="this.style.background='linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'; this.style.color='white';"
+                 onmouseout="this.style.background='linear-gradient(135deg, #f8f9fa 0%, #fff 100%)'; this.style.color='';"
+                 onclick="playGame('days-months-seasons')">
+                <span class="game-icon">📅</span>
+                <h3 class="game-title">Days, Months & Seasons</h3>
+                <p class="game-description">
+                    Practice temporal vocabulary with contextual sentences. Listen, choose, and speak!
+                </p>
+                <div class="difficulty-label">3 Difficulty Levels Available</div>
+                <div class="game-levels">
+                    <div class="level-indicator"></div>
+                    <div class="level-indicator"></div>
+                    <div class="level-indicator"></div>
+                </div>
+                <small>Duolingo-style exercises</small>
+            </div>
+
             <!-- Future Games -->
             <div class="coming-soon-card">
                 <div class="coming-soon-badge">Coming Soon</div>
@@ -298,6 +317,9 @@
                     break;
                 case 'ordinal':
                     gameUrl = './games/ordinal-numbers/ordinal-numbers.html';
+                    break;
+                case 'days-months-seasons':
+                    gameUrl = './games/days-months-seasons/days-months-seasons.html';
                     break;
                 default:
                     alert('This game is not available yet!');
