@@ -1,0 +1,71 @@
+{
+  "id": "02.ordinal-numbers",
+  "engine": "number-practice-engine",
+  "title": "Ordinal Numbers",
+  "subtitle": "Practice English Ordinal Numbers",
+  "icon": "🏆",
+  "theme": "theme-orange",
+  "overview": "🎯 Choose your practice mode:",
+  "conversionType": "ordinal",
+  "displayType": "ordinal-suffix",
+  "modes": [
+    {
+      "id": "writing",
+      "name": "Writing Mode",
+      "icon": "✍️",
+      "description": "See ordinal numbers and write them in English",
+      "instruction": "✍️ Choose a number range and write the ordinal numbers in English!<br>Examples: 1st → first, 2nd → second, 3rd → third, 4th → fourth",
+      "gameInstruction": "Write the ordinal number below in English and press Enter.<br><small style=\"opacity: 0.8;\">Keep trying until you get it right!</small>"
+    },
+    {
+      "id": "speaking",
+      "name": "Speaking Mode",
+      "icon": "🗣️",
+      "description": "See ordinal numbers and speak them aloud",
+      "instruction": "🗣️ Choose a number range and speak the ordinal numbers aloud!",
+      "gameInstruction": "Say the ordinal number shown below aloud.<br><small style=\"opacity: 0.8;\">Click the microphone and speak clearly!</small>"
+    },
+    {
+      "id": "listening",
+      "name": "Listening Mode",
+      "icon": "👂",
+      "description": "Listen to ordinal numbers and write what you hear",
+      "instruction": "👂 Choose a number range and listen to the ordinal numbers!",
+      "gameInstruction": "Listen to the ordinal number and write what you hear.<br><small style=\"opacity: 0.8;\">Click play to hear the number!</small>"
+    }
+  ],
+  "difficulties": [
+    {
+      "id": "easy",
+      "name": "Easy",
+      "icon": "🟢",
+      "description": "Ordinal numbers from 1st to 20th",
+      "min": 1,
+      "max": 20
+    },
+    {
+      "id": "medium",
+      "name": "Medium",
+      "icon": "🟡",
+      "description": "Ordinal numbers from 1st to 100th",
+      "min": 1,
+      "max": 100
+    },
+    {
+      "id": "hard",
+      "name": "Hard",
+      "icon": "🔴",
+      "description": "Ordinal numbers from 1st to 999,999th",
+      "min": 1,
+      "max": 999999
+    },
+    {
+      "id": "expert",
+      "name": "Expert",
+      "icon": "🔥",
+      "description": "Ordinal numbers from 1st to 999,999,999th",
+      "min": 1,
+      "max": 999999999
+    }
+  ]
+}

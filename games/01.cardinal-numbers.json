@@ -1,0 +1,71 @@
+{
+  "id": "01.cardinal-numbers",
+  "engine": "number-practice-engine",
+  "title": "Cardinal Numbers",
+  "subtitle": "Practice English Numbers",
+  "icon": "🎮",
+  "theme": "theme-purple",
+  "overview": "🎯 Choose your practice mode:",
+  "conversionType": "cardinal",
+  "displayType": "numeric",
+  "modes": [
+    {
+      "id": "writing",
+      "name": "Writing Mode",
+      "icon": "✍️",
+      "description": "See numbers and write them in English",
+      "instruction": "✍️ Choose a number range and write the numbers in English!",
+      "gameInstruction": "Write the number below in English and press Enter.<br><small style=\"opacity: 0.8;\">Keep trying until you get it right!</small>"
+    },
+    {
+      "id": "speaking",
+      "name": "Speaking Mode",
+      "icon": "🗣️",
+      "description": "See numbers and speak them aloud",
+      "instruction": "🗣️ Choose a number range and speak the numbers aloud!",
+      "gameInstruction": "Say the number shown below aloud.<br><small style=\"opacity: 0.8;\">Click the microphone and speak clearly!</small>"
+    },
+    {
+      "id": "listening",
+      "name": "Listening Mode",
+      "icon": "👂",
+      "description": "Listen to numbers and write what you hear",
+      "instruction": "👂 Choose a number range and listen to the numbers!",
+      "gameInstruction": "Listen to the number and write what you hear.<br><small style=\"opacity: 0.8;\">Click play to hear the number!</small>"
+    }
+  ],
+  "difficulties": [
+    {
+      "id": "easy",
+      "name": "Easy",
+      "icon": "🟢",
+      "description": "Numbers from 1 to 20",
+      "min": 1,
+      "max": 20
+    },
+    {
+      "id": "medium",
+      "name": "Medium",
+      "icon": "🟡",
+      "description": "Numbers from 1 to 100",
+      "min": 1,
+      "max": 100
+    },
+    {
+      "id": "hard",
+      "name": "Hard",
+      "icon": "🔴",
+      "description": "Numbers from 1 to 999,999",
+      "min": 1,
+      "max": 999999
+    },
+    {
+      "id": "expert",
+      "name": "Expert",
+      "icon": "🔥",
+      "description": "Numbers from 1 to 999,999,999",
+      "min": 1,
+      "max": 999999999
+    }
+  ]
+}

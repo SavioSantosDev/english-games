@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Days, Months & Seasons - English Game</title>
-    <link rel="stylesheet" href="../../css/styles.css">
+    <title id="pageTitle">Sentence Practice Game</title>
+    <link rel="stylesheet" href="../css/styles.css">
 </head>
-<body class="theme-blue">
+<body id="gameBody" class="theme-blue">
     <div class="container">
         <!-- Start Screen -->
         <div id="startScreen" class="screen active">
-            <h1>📅 Days, Months & Seasons</h1>
-            <p class="subtitle">Practice English with advanced contextual sentences</p>
+            <h1 id="gameTitle">📅 Loading...</h1>
+            <p class="subtitle" id="gameSubtitle">Practice Game</p>
             
             <div class="difficulty-info">
                 <h3>About This Game</h3>
-                <p>Listen to complex sentences about days, months, and seasons. Practice both listening comprehension and speaking with advanced vocabulary and grammar structures!</p>
+                <p id="gameDescription">Loading game information...</p>
             </div>
 
             <!-- Settings Panel -->
@@ -41,7 +41,7 @@
             </button>
 
             <div style="text-align: center; margin-top: 30px;">
-                <a href="../../index.html" class="back-home">← Back to Menu</a>
+                <a href="../index.html" class="back-home">← Back to Menu</a>
             </div>
         </div>
 
@@ -85,7 +85,7 @@
                 </div>
 
                 <div style="text-align: center; margin-top: 30px;">
-                    <a href="../../index.html" class="back-home">← Back to Menu</a>
+                    <a href="../index.html" class="back-home">← Back to Menu</a>
                 </div>
             </div>
         </div>
@@ -93,31 +93,10 @@
 
     <script>
         // ============================================
-        // REUSABLE SENTENCE DATABASE STRUCTURE
-        // This structure can be easily adapted for other games
-        // Database loaded from external JSON file
+        // GAME CONFIGURATION (LOADED FROM JSON)
         // ============================================
-        
-        let sentenceDatabase = null;
-        let databaseLoaded = false;
-
-        // ============================================
-        // DATABASE LOADING
-        // ============================================
-        async function loadDatabase() {
-            try {
-                const response = await fetch('./database.json');
-                if (!response.ok) {
-                    throw new Error('Failed to load database');
-                }
-                sentenceDatabase = await response.json();
-                databaseLoaded = true;
-                console.log('Database loaded successfully');
-            } catch (error) {
-                console.error('Error loading database:', error);
-                alert('Error loading game data. Please refresh the page.');
-            }
-        }
+        let gameConfig = null;
+        let configLoaded = false;
 
         // ============================================
         // GAME STATE
@@ -132,18 +111,54 @@
             recognition: null,
             isListening: false,
             autoAdvance: true,
-            audioSpeed: 1.0 // 1.0 = normal, 0.7 = slow
+            audioSpeed: 1.0
         };
 
         // ============================================
-        // CORE GAME ENGINE - REUSABLE
+        // LOAD GAME CONFIGURATION
+        // ============================================
+        async function loadGameConfig() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const gameId = urlParams.get('game');
+            
+            if (!gameId) {
+                alert('No game specified!');
+                window.location.href = '../index.html';
+                return;
+            }
+
+            try {
+                const response = await fetch(`../games/${gameId}.json`);
+                if (!response.ok) {
+                    throw new Error('Failed to load game configuration');
+                }
+                gameConfig = await response.json();
+                configLoaded = true;
+                
+                applyGameConfig();
+            } catch (error) {
+                console.error('Error loading game configuration:', error);
+                alert('Error loading game. Please return to main menu.');
+                window.location.href = '../index.html';
+            }
+        }
+
+        // ============================================
+        // APPLY CONFIGURATION TO UI
+        // ============================================
+        function applyGameConfig() {
+            document.getElementById('pageTitle').textContent = `${gameConfig.title} - English Game`;
+            document.getElementById('gameTitle').textContent = `${gameConfig.icon} ${gameConfig.title}`;
+            document.getElementById('gameSubtitle').textContent = gameConfig.subtitle;
+            document.getElementById('gameDescription').textContent = gameConfig.description;
+            document.getElementById('gameBody').className = gameConfig.theme;
+        }
+
+        // ============================================
+        // GAME ENGINE
         // ============================================
 
         async function startGame() {
-            if (!databaseLoaded) {
-                await loadDatabase();
-            }
-            
             gameState.currentQuestionIndex = 0;
             gameState.correctCount = 0;
             gameState.incorrectCount = 0;
@@ -160,7 +175,6 @@
         function setAudioSpeed(speed) {
             gameState.audioSpeed = speed;
             
-            // Update button states
             document.querySelectorAll('.speed-button').forEach(btn => {
                 btn.classList.remove('active');
             });
@@ -169,16 +183,11 @@
 
         function generateExercises(count) {
             const exercises = [];
-            const templates = sentenceDatabase.sentences;
+            const templates = gameConfig.sentences;
             
             for (let i = 0; i < count; i++) {
-                // Randomly choose exercise type (50/50 split)
                 const type = Math.random() < 0.5 ? 'listenChoose' : 'listenRepeat';
-                
-                // Randomly select a template
                 const template = templates[Math.floor(Math.random() * templates.length)];
-                
-                // Generate sentence with variables filled
                 const exerciseData = fillVariables(template);
                 
                 exercises.push({
@@ -195,21 +204,19 @@
             let answer = template.answer;
             const usedValues = {};
 
-            // Find all variables in the sentence
             const variablePattern = /\{([^}:]+)(?::([^}]+))?\}/g;
             let match;
             
             while ((match = variablePattern.exec(template.sentence)) !== null) {
                 const [fullMatch, varName, fixedValue] = match;
                 
-                // Use fixed value if provided, otherwise random
                 let value;
                 if (fixedValue) {
                     value = fixedValue;
                 } else if (usedValues[varName]) {
                     value = usedValues[varName];
                 } else {
-                    const pool = sentenceDatabase.variables[varName];
+                    const pool = gameConfig.variables[varName];
                     value = pool[Math.floor(Math.random() * pool.length)];
                     usedValues[varName] = value;
                 }
@@ -217,7 +224,6 @@
                 sentence = sentence.replace(fullMatch, value);
             }
 
-            // Fill variables in answer
             variablePattern.lastIndex = 0;
             while ((match = variablePattern.exec(template.answer)) !== null) {
                 const [fullMatch, varName, fixedValue] = match;
@@ -225,7 +231,6 @@
                 answer = answer.replace(fullMatch, value);
             }
 
-            // Fill variables in question
             let question = template.question;
             variablePattern.lastIndex = 0;
             while ((match = variablePattern.exec(template.question)) !== null) {
@@ -234,7 +239,6 @@
                 question = question.replace(fullMatch, value);
             }
 
-            // Generate wrong answers based on category
             const wrongAnswers = generateWrongAnswers(answer, template.category);
 
             return {
@@ -250,14 +254,13 @@
             let pool;
             
             if (category === 'days') {
-                pool = sentenceDatabase.variables.day;
+                pool = gameConfig.variables.day;
             } else if (category === 'months') {
-                pool = sentenceDatabase.variables.month;
+                pool = gameConfig.variables.month;
             } else if (category === 'seasons') {
-                pool = sentenceDatabase.variables.season;
+                pool = gameConfig.variables.season;
             }
 
-            // Get 3 random wrong answers
             const wrong = pool.filter(item => item !== correctAnswer);
             const shuffled = wrong.sort(() => Math.random() - 0.5);
             return shuffled.slice(0, 3);
@@ -271,18 +274,15 @@
 
             gameState.currentExercise = gameState.exercises[gameState.currentQuestionIndex];
             
-            // Update progress
             document.getElementById('currentQuestion').textContent = gameState.currentQuestionIndex + 1;
             document.getElementById('totalQuestions').textContent = gameState.totalQuestions;
             
-            // Render exercise based on type
             if (gameState.currentExercise.type === 'listenChoose') {
                 renderListenChooseExercise();
             } else {
                 renderListenRepeatExercise();
             }
             
-            // Populate transcript after rendering
             setTimeout(() => {
                 const transcriptElement = document.getElementById('transcriptText');
                 if (transcriptElement) {
@@ -311,7 +311,6 @@
         function renderListenChooseExercise() {
             const container = document.getElementById('exerciseContainer');
             
-            // Create options array and shuffle
             const allOptions = [
                 gameState.currentExercise.correctAnswer,
                 ...gameState.currentExercise.wrongAnswers
@@ -366,7 +365,6 @@
                 </div>
             `;
 
-            // Auto-play audio on load
             setTimeout(() => playAudio(), 500);
         }
 
@@ -381,16 +379,13 @@
         }
 
         function selectOption(answer, button) {
-            // Deselect all options
             document.querySelectorAll('.option-button').forEach(btn => {
                 btn.classList.remove('selected');
             });
             
-            // Select clicked option
             button.classList.add('selected');
             selectedAnswer = answer;
             
-            // Enable check button
             document.getElementById('checkButton').disabled = false;
         }
 
@@ -399,16 +394,13 @@
             const feedback = document.getElementById('feedback');
             const checkButton = document.getElementById('checkButton');
             
-            // Disable all option buttons
             document.querySelectorAll('.option-button').forEach(btn => {
                 btn.disabled = true;
                 
-                // Highlight correct answer
                 if (btn.textContent.includes(gameState.currentExercise.correctAnswer)) {
                     btn.classList.add('correct');
                 }
                 
-                // Highlight incorrect selection
                 if (!isCorrect && btn.textContent.includes(selectedAnswer)) {
                     btn.classList.add('incorrect');
                 }
@@ -419,7 +411,6 @@
                 feedback.innerHTML = '<div class="feedback success">✓ Correct! Well done!</div>';
                 updateScore();
                 
-                // Auto-advance if enabled
                 if (gameState.autoAdvance) {
                     setTimeout(() => {
                         nextQuestion();
@@ -433,7 +424,6 @@
                 feedback.innerHTML = `<div class="feedback error">✗ Incorrect. The correct answer is: <strong>${gameState.currentExercise.correctAnswer}</strong></div>`;
                 updateScore();
                 
-                // Change button to "Next"
                 checkButton.textContent = 'Next Question →';
                 checkButton.onclick = nextQuestion;
             }
@@ -489,10 +479,8 @@
                 </div>
             `;
 
-            // Auto-play audio on load
             setTimeout(() => playAudio(), 500);
 
-            // Initialize speech recognition
             initializeSpeechRecognition();
         }
 
@@ -557,7 +545,6 @@
             const expected = normalizeText(gameState.currentExercise.sentence);
             const spoken = normalizeText(transcript);
             
-            // Calculate similarity (simple approach - can be enhanced)
             const isCorrect = calculateSimilarity(expected, spoken) > 0.7;
 
             const feedback = document.getElementById('feedback');
@@ -571,7 +558,6 @@
                 
                 updateScore();
                 
-                // Auto-advance if enabled
                 if (gameState.autoAdvance) {
                     setTimeout(() => {
                         nextQuestion();
@@ -670,12 +656,10 @@
         // INITIALIZATION
         // ============================================
 
-        // Load database on page load
         window.addEventListener('DOMContentLoaded', () => {
-            loadDatabase();
+            loadGameConfig();
         });
 
-        // Clean up speech synthesis on page unload
         window.addEventListener('beforeunload', () => {
             window.speechSynthesis.cancel();
             if (gameState.recognition) {

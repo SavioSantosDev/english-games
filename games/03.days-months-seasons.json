@@ -1,8 +1,11 @@
 {
-  "theme": {
-    "name": "Days, Months & Seasons",
-    "icon": "📅"
-  },
+  "id": "03.days-months-seasons",
+  "engine": "sentence-practice-engine",
+  "title": "Days, Months & Seasons",
+  "subtitle": "Practice English with advanced contextual sentences",
+  "icon": "📅",
+  "theme": "theme-blue",
+  "description": "Listen to complex sentences about days, months, and seasons. Practice both listening comprehension and speaking with advanced vocabulary and grammar structures!",
   "variables": {
     "month": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
     "day": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
